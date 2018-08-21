@@ -100,7 +100,7 @@ public class MemberController implements ApplicationContextAware {
         if (Ognl.isEmpty(memberNo) && Ognl.isEmpty(phone) && Ognl.isEmpty(idCard) &&
                 Ognl.isEmpty(realName) && Ognl.isEmpty(username) && Ognl.isEmpty(parentNo) &&
                 (Boolean.FALSE == threeThirty || null == threeThirty))
-            recordCount = 8962017;
+            recordCount = 8958637;
         else
             recordCount = memberMapper.getMemberCount(param);
 
@@ -142,7 +142,7 @@ public class MemberController implements ApplicationContextAware {
         //List<Map<String, Object>> oj = new List<HashMap<>>();
         for (Member member : members) {
             Map<String, Object> item = new HashMap<>();
-            String baseText = "层级:"+member.getCur_level()+"，"+ member.getUsername() + "，证件号：" + member.getIdCard() + "，手机：" + member.getPhone();
+            String baseText = "层级:"+member.getCurLevel()+"，"+ member.getUsername() + "，证件号：" + member.getIdCard() + "，手机：" + member.getPhone();
             if (member.getDirectCount() > 0) {
                 baseText += "，下级深度：" + member.getChildDepth() + "，下级总数：" + member.getChildTotal();
                 item.put("type", "folder");

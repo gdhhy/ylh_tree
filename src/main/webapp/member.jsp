@@ -59,7 +59,7 @@
                         {"data": "idCard", "sClass": "center"},
                         {"data": "phone", "sClass": "center"},
                         {"data": "parentNo", "sClass": "center"},
-                        {"data": "level", "sClass": "center"},
+                        {"data": "curLevel", "sClass": "center"},
                         {"data": "childTotal", "sClass": "center"},
                         {"data": "childDepth", "sClass": "center"},
                         {"data": "directCount", "sClass": "center"},

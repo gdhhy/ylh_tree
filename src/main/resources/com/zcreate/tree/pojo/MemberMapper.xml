@@ -12,7 +12,7 @@
         <result column="id_card" jdbcType="VARCHAR" property="idCard"/>
         <result column="member_info" jdbcType="VARCHAR" property="memberInfo"/>
         <result column="parent_no" jdbcType="VARCHAR" property="parentNo"/>
-        <result column="cur_level" jdbcType="INTEGER" property="cur_level"/>
+        <result column="cur_level" jdbcType="INTEGER" property="curLevel"/>
         <result column="child_total" jdbcType="INTEGER" property="childTotal"/>
         <result column="child_depth" jdbcType="INTEGER" property="childDepth"/>
         <result column="direct_count" jdbcType="INTEGER" property="directCount"/>
@@ -29,13 +29,13 @@
         </where>
     </sql>
     <select id="getMemberCount" resultType="int" parameterType="java.util.Map" useCache="true">
-        SELECT count(*) FROM member
+        SELECT count(*) FROM member_v4
         <include refid="queryWhere"/>
     </select>
     <select id="selectMember" resultMap="UserResult" parameterType="java.util.Map" useCache="true">
         SELECT
         member_id, member_no, user_name,real_name, id_card, phone, member_info, parent_no, cur_level, child_total, child_depth, direct_count
-        FROM member
+        FROM member_v4
         <include refid="queryWhere"/>
         <if test="@com.zcreate.Ognl@isNotEmpty(param.orderBy)"> order by ${param.orderBy}</if>
         <choose>
@@ -53,7 +53,7 @@
     <select id="getMember" resultMap="UserResult" parameterType="java.util.Map" useCache="true">
         SELECT
         member_id, member_no, user_name,real_name, id_card, phone, member_info, parent_no, cur_level, child_total, child_depth, direct_count
-        FROM member
+        FROM member_v4
         <include refid="queryWhere"/>  limit 1
     </select>
     <select id="selectParent" resultType="java.util.Map" parameterType="java.util.Map" statementType="CALLABLE">

@@ -86,60 +86,96 @@
             function showMemberInfo(memberNo) {
                 $.getJSON("/listMember.jspx?memberNo=" + memberNo, function (result) { //https://www.cnblogs.com/liuling/archive/2013/02/07/sdafsd.html
                     if (result.data.length > 0) {
+                        var memberInfo = JSON.parse(result.data[0].memberInfo);
                         var html = "";
                         html += row.format("用户名：", result.data[0].realName, "证件号：", result.data[0].idCard);
                         html += row.format("用户ID ：", result.data[0].memberNo, "手机号码：", result.data[0].phone);
 
-                        html += row.format("当前层级：", result.data[0].level, "下级深度：", result.data[0].childDepth);
+                        html += row.format("当前层级：", result.data[0].curLevel, "下级深度：", result.data[0].childDepth);
                         html += row.format("全部下级数：", result.data[0].childTotal, " 直接下级数：", result.data[0].directCount);
 
                         $('#baseInfo').html(html);
-
-                        html = "";
-
-                        var keyVals = [];
-                        var i = 0;
-                        if (result.data[0].memberInfo)
-                            $.each(JSON.parse(result.data[0].memberInfo), function (key, val) {
-                                keyVals[i++] = {'key': key, 'value': val};
+                        if (memberInfo) {
+                            var html = "";
+                            $.each(memberInfo, function (key, val) {
+                                var objType=typeof (val);
+                                if (val instanceof Array) html += showDivArray(key, val);
+                                else if (objType==="object") html += showDivObject(key, val);
                             });
-                        for (i = 0; i < keyVals.length; i += 2) {
-                            if (keyVals[i + 1])
-                                html += row.format(keyVals[i].key, keyVals[i].value, keyVals[i + 1].key, keyVals[i + 1].value);
-                            else
-                                html += row.format(keyVals[i].key, keyVals[i].value, '', '');
+                            $('#aaa').html(html);
                         }
 
-                        $('#memberInfo').html(html);
-
-                        /*$('#memberInfo').find(".profile-info-row").each(function () {
-                            for (var i = 0; i < 2; i++) {
-                                var nameElement = $(this).find('.profile-info-name:eq(' + i + ')');
-                                if (nameElement.text().indexOf("金") != -1 || nameElement.text().endWith("币")) {
-                                    var valueElement = $(this).find('.profile-info-value:eq(' + i + ')');
-                                    valueElement.text(accounting.formatMoney(valueElement.text()));
-                                    valueElement.addClass("pull-right");
-                                }
-
-                                if (nameElement.text().endWith("上级")) {
-                                    var valueElement = $(this).find('.profile-info-value:eq(' + i + ')');
-                                    if (valueElement.text() != '0')
-                                        valueElement.html("<a href='memberInfo.jspx?memberNo={0}'>{1}</a>".format(valueElement.text(), valueElement.text()));
-                                }
-                            }
-                        });*/
-                        $('#baseInfo').find(".profile-info-row").each(function () {
-                            if ($(this).find('.profile-info-name:eq(0)').text() === "用户ID ：") {
-                                var valueElement = $(this).find('.profile-info-value:eq(0)');
-
-                                valueElement.html("<a href='memberInfo.jspx?memberNo={0}'>{1}</a>".format(valueElement.text(), valueElement.text()));
-                            }
-                        });
                     }
                 });
-
             }
 
+            var row2 = '<div class="profile-info-row">' +
+                '<div class="profile-info-name">{0}</div>' +
+                '<div class="profile-info-value">{1}</div>' +
+                '<div class="profile-info-name">{2}</div>' +
+                '<div class="profile-info-value">{3}</div>' +
+                '</div>';
+            var row3 = '<div class="profile-info-row">' +
+                '<div class="profile-info-name">{0}</div>' +
+                '<div class="profile-info-value">{1}</div>' +
+                '<div class="profile-info-name">{2}</div>' +
+                '<div class="profile-info-value">{3}</div>' +
+                '<div class="profile-info-name">{4}</div>' +
+                '<div class="profile-info-value">{5}</div>' +
+                '</div>';
+
+            var divObject = '<div class="widget-main padding-8" >' +
+                '<h5 class="widget-title blue smaller">{0}</h5>' +
+                '<div class="profile-user-info profile-user-info-striped">' +
+                '{1}' +
+                '</div>' +
+                '</div>';
+            function showDivObject(propName, obj) {
+                var keyVals = [];
+                var kk = 0;
+                $.each(obj, function (key, val) {
+                    keyVals[kk++] = {'key': key, 'value': val};
+                });
+                var html = "";
+                if (keyVals.length % 3 === 0) {
+                    for (kk = 0; kk < keyVals.length; kk += 3)
+                        html += row3.format(keyVals[kk].key, keyVals[kk].value,
+                            keyVals[kk + 1].key, keyVals[kk + 1].value,
+                            keyVals[kk + 2].key, keyVals[kk + 2].value);
+                }
+                else
+                    for (kk = 0; kk < keyVals.length; kk += 2) {
+                        if (keyVals[kk + 1])
+                            html += row2.format(keyVals[kk].key, keyVals[kk].value, keyVals[kk + 1].key, keyVals[kk + 1].value);
+                        else
+                            html += row2.format(keyVals[kk].key, keyVals[kk].value, '', '');
+                    }
+                return divObject.format(propName, html);
+            }
+
+            function showDivArray(propName, obj) {
+                var keyVals = [];
+                var kk = 0;
+                for (var i = 0; i < obj.length; i++)
+                    $.each(obj[i], function (key, val) {
+                        keyVals[kk++] = {'key': key, 'value': val};
+                    });
+                var html = "";
+                if (keyVals.length % 3 === 0) {
+                    for (kk = 0; kk < keyVals.length; kk += 3)
+                        html += row3.format(keyVals[kk].key, keyVals[kk].value,
+                            keyVals[kk + 1].key, keyVals[kk + 1].value,
+                            keyVals[kk + 2].key, keyVals[kk + 2].value);
+                }
+                else
+                    for (kk = 0; kk < keyVals.length; kk += 2) {
+                        if (keyVals[kk + 1])
+                            html += row2.format(keyVals[kk].key, keyVals[kk].value, keyVals[kk + 1].key, keyVals[kk + 1].value);
+                        else
+                            html += row2.format(keyVals[kk].key, keyVals[kk].value, '', '');
+                    }
+                return divObject.format(propName, html);
+            }
             var remoteDateSource = function (options, callback) {
                 var parent_id = null;
                 if (!('text' in options || 'type' in options)) {
@@ -225,7 +261,7 @@
                                     <div class="widget-header">
                                         <h4 class="widget-title  smaller">
                                             <c:out value="${member.realName}"/> -<span class="smaller-80">
-                                            当前层级：<c:out value="${member.cur_level}"/>
+                                            当前层级：<c:out value="${member.curLevel}"/>
                                             下级深度：<c:out value="${member.childDepth}"/>
                                             全部下级数：<c:out value="${member.childTotal}"/>
                                             直接下级数：<c:out value="${member.directCount}"/> </span>
@@ -271,9 +307,10 @@
                                             </div>
                                             <!-- /section:pages/profile.info -->
                                         </div>
-                                        <div class="widget-main padding-8">
+                                        <div id="aaa"></div>
+                                        <%--<div class="widget-main padding-8">
                                             提示：点击用户ID、上级，可以查看该ID的成员信息。
-                                        </div>
+                                        </div>--%>
                                     </div>
                                 </div>
                             </div>

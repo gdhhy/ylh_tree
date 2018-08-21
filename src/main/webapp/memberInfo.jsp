@@ -252,7 +252,7 @@
                                     <div class="widget-header">
                                         <h4 class="widget-title  smaller">
                                             <c:out value="${member.realName}"/> -<span class="smaller-80">
-                                            当前层级：<c:out value="${member.cur_level}"/>
+                                            当前层级：<c:out value="${member.curLevel}"/>
                                             下级深度：<c:out value="${member.childDepth}"/>
                                             全部下级数：<c:out value="${member.childTotal}"/>
                                             直接下级数：<c:out value="${member.directCount}"/> </span>
