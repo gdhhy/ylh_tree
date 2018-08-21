@@ -11,7 +11,7 @@ public class Member implements Serializable {
     private String phone;
     private String memberInfo;
     private String parentNo;
-    private Integer level;
+    private Integer cur_level;
     private Integer childTotal;
     private Integer childDepth;
     private Integer directCount;
@@ -80,12 +80,12 @@ public class Member implements Serializable {
         this.parentNo = parentNo;
     }
 
-    public Integer getLevel() {
-        return level;
+    public Integer getCur_level() {
+        return cur_level;
     }
 
-    public void setLevel(Integer level) {
-        this.level = level;
+    public void setCur_level(Integer cur_level) {
+        this.cur_level = cur_level;
     }
 
     public Integer getChildTotal() {

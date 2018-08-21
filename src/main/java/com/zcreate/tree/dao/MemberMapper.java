@@ -16,6 +16,8 @@ public interface MemberMapper {
 
     List<Member> selectMember(@Param("param") Map<String, Object> param);
 
+    Member getMember(@Param("param") Map<String, Object> param);
+
     List<Map<String, Object>> selectParent(@Param("param") Map<String, Object> param);
 
 }

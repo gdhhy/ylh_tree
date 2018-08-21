@@ -142,13 +142,16 @@ public class MemberController implements ApplicationContextAware {
         //List<Map<String, Object>> oj = new List<HashMap<>>();
         for (Member member : members) {
             Map<String, Object> item = new HashMap<>();
+            String baseText = "层级:"+member.getCur_level()+"，"+ member.getUsername() + "，证件号：" + member.getIdCard() + "，手机：" + member.getPhone();
             if (member.getDirectCount() > 0) {
-                item.put("text", member.getRealName() + "，下级深度：" + member.getChildDepth() + "，下级总数：" + member.getChildTotal());
+                baseText += "，下级深度：" + member.getChildDepth() + "，下级总数：" + member.getChildTotal();
                 item.put("type", "folder");
             } else {
-                item.put("text", member.getRealName());
+                baseText = "&nbsp;&nbsp;&nbsp;<i class='ace-icon fa fa-user'></i>&nbsp;" + baseText;
                 item.put("type", "item");
             }
+
+            item.put("text", baseText);
 
             Map<String, Object> addParam = new HashMap<>();
             addParam.put("children", member.getDirectCount() > 0 ? true : null);
@@ -191,11 +194,60 @@ public class MemberController implements ApplicationContextAware {
         return gson.toJson(list);
     }
 
+    @ResponseBody
+    @RequestMapping(value = "/memberOrg", method = RequestMethod.GET, produces = "text/html;charset=UTF-8")
+    public String memberOrg(@RequestParam(value = "id", required = false) String memberNo) {
+        Map<String, Object> param = new HashMap<>();
+        param.put("memberNo", memberNo);
+        Member root = memberMapper.getMember(param);
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("name", root.getUsername());
+        result.put("title", "" + root.getIdCard() + "\n下级总数：" + root.getChildTotal());
+
+        param.clear();
+        param.put("parentNo", memberNo);
+        param.put("orderBy", "direct_count desc");
+        List<Member> members1 = memberMapper.selectMember(param);
+        List<Map<String, Object>> list = new ArrayList<>();
+        //for (Member member : members1) {
+        for (int i = 0; i < 10 && i < members1.size(); i++) {
+            Map<String, Object> item = new HashMap<>();
+            String value = "" + members1.get(i).getIdCard();
+            if (members1.get(i).getDirectCount() > 0)
+                value += "下级总数：" + members1.get(i).getChildTotal();
+
+            item.put("name", members1.get(i).getUsername());
+            item.put("title", value);
+            if (members1.get(i).getDirectCount() > 0) {
+                param.put("parentNo", memberNo);
+                List<Member> members2 = memberMapper.selectMember(param);
+                List<Map<String, Object>> list2 = new ArrayList<>();
+                for (int j = 0; j < 3 && j < members2.size(); j++) {
+                    Map<String, Object> item2 = new HashMap<>();
+                    String value2 = "" + members1.get(i).getIdCard();
+                    if (members2.get(j).getDirectCount() > 0)
+                        value2 += "下级总数：" + members2.get(j).getChildTotal();
+
+                    item2.put("name", members2.get(j).getUsername());
+                    item2.put("title", value2);
+
+                    list2.add(item2);
+                }
+                item.put("children", list2);
+            }
+
+            list.add(item);
+        }
+        if (members1.size() > 0) result.put("children", list);
+
+        return gson.toJson(result);
+    }
+
     @RequestMapping(value = "/member", method = RequestMethod.GET)
     public String member(@RequestParam(value = "searchKey", required = false) String searchKey, ModelMap model) {
         log.debug("url = member");
 
-        model.addAttribute("systemTitle", "系统登录");
+        //model.addAttribute("systemTitle", "系统登录");
         return "/member";
     }
 
@@ -210,7 +262,7 @@ public class MemberController implements ApplicationContextAware {
             model.addAttribute("member", members.get(0));
 
 
-        model.addAttribute("systemTitle", "系统登录");
+        //model.addAttribute("systemTitle", "系统登录");
         return "/memberInfo";
     }
 
@@ -224,7 +276,7 @@ public class MemberController implements ApplicationContextAware {
             model.addAttribute("member", members.get(0));
 
 
-        model.addAttribute("systemTitle", "系统登录");
+        //model.addAttribute("systemTitle", "系统登录");
         return "/memberInfo2";
     }
 

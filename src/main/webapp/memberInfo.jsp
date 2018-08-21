@@ -18,6 +18,7 @@
 
     <!-- ace styles -->
     <link rel="stylesheet" href="assets/css/ace.css" class="ace-main-stylesheet" id="main-ace-style"/>
+    <link rel="stylesheet" href="components/fuelux/fuelux.min.css">
 
 
     <!-- HTML5shiv and Respond.js for IE8 to support HTML5 elements and media queries -->
@@ -71,6 +72,7 @@
     <script type="text/javascript" src="components/zTree_v3/js/jquery.ztree.core.js"></script>
     <script type="text/javascript" src="components/zTree_v3/js/jquery.ztree.excheck.js"></script>
     <script type="text/javascript" src="components/zTree_v3/js/jquery.ztree.exedit.js"></script>
+    <script src="components/fuelux/fuelux.min.js"></script>
     <script type="text/javascript">
         jQuery(function ($) {
             var setting = {
@@ -227,7 +229,7 @@
         })
     </script>
 </head>
-<body class="no-skin">
+<body class="no-skin fuelux">
 <div class="main-container ace-save-state" id="main-container">
     <script type="text/javascript">
         try {
@@ -250,7 +252,7 @@
                                     <div class="widget-header">
                                         <h4 class="widget-title  smaller">
                                             <c:out value="${member.realName}"/> -<span class="smaller-80">
-                                            当前层级：<c:out value="${member.level}"/>
+                                            当前层级：<c:out value="${member.cur_level}"/>
                                             下级深度：<c:out value="${member.childDepth}"/>
                                             全部下级数：<c:out value="${member.childTotal}"/>
                                             直接下级数：<c:out value="${member.directCount}"/> </span>

@@ -10,6 +10,8 @@
     <!-- bootstrap & fontawesome -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="components/font-awesome/css/font-awesome.css"/>
+    <%--<link href="components/fuelux/fuelux.min.css" rel="stylesheet">--%>
+
 
     <!-- page specific plugin styles -->
 
@@ -31,7 +33,6 @@
     <!-- basic scripts -->
 
     <!--[if !IE]> -->
-    <!--<script src="components/jquery/dist/jquery.js"></script>-->
     <script src="js/jquery-3.2.0.min.js"></script>
 
     <!-- <![endif]-->
@@ -55,14 +56,13 @@
     <script src="js/datatables/dataTables.select.min.js"></script>
     <script src="js/jquery-ui/jquery-ui.min.js"></script>
 
-    <%--<script src="https://cdn.bootcss.com/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>--%>
     <script src="js/accounting.min.js"></script>
     <script src="js/fuelux/tree.js"></script>
+    <%--<script src="components/fuelux/fuelux.min.js"></script>--%>
     <script src="js/func.js"></script>
     <%--<script src="assets/js/jquery.validate.min.js"></script>--%>
     <%--<script src="../js/messages_cn.js"></script>--%>
 
-    <%--<link href="https://cdn.bootcss.com/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.css" rel="stylesheet">--%>
     <link rel="stylesheet" href="css/jqueryui/jquery-ui.min.css"/>
     <link rel="stylesheet" href="components/jquery-ui.custom/jquery-ui.custom.css"/>
 
@@ -81,13 +81,13 @@
                 '<div class="profile-info-name">{2}</div>' +
                 '<div class="profile-info-value">{3}</div>' +
                 '</div>';
-            showMemberInfo(<c:out value="${member.memberNo}"/>);
+            showMemberInfo('<c:out value="${member.memberNo}"/>');
 
             function showMemberInfo(memberNo) {
                 $.getJSON("/listMember.jspx?memberNo=" + memberNo, function (result) { //https://www.cnblogs.com/liuling/archive/2013/02/07/sdafsd.html
                     if (result.data.length > 0) {
                         var html = "";
-                        html += row.format("用户名：", result.data[0].realName, "证件号号：", result.data[0].idCard);
+                        html += row.format("用户名：", result.data[0].realName, "证件号：", result.data[0].idCard);
                         html += row.format("用户ID ：", result.data[0].memberNo, "手机号码：", result.data[0].phone);
 
                         html += row.format("当前层级：", result.data[0].level, "下级深度：", result.data[0].childDepth);
@@ -112,9 +112,9 @@
 
                         $('#memberInfo').html(html);
 
-                        $('#memberInfo').find(".profile-info-row").each(function () {
+                        /*$('#memberInfo').find(".profile-info-row").each(function () {
                             for (var i = 0; i < 2; i++) {
-                                var nameElement=$(this).find('.profile-info-name:eq(' + i + ')');
+                                var nameElement = $(this).find('.profile-info-name:eq(' + i + ')');
                                 if (nameElement.text().indexOf("金") != -1 || nameElement.text().endWith("币")) {
                                     var valueElement = $(this).find('.profile-info-value:eq(' + i + ')');
                                     valueElement.text(accounting.formatMoney(valueElement.text()));
@@ -127,7 +127,7 @@
                                         valueElement.html("<a href='memberInfo.jspx?memberNo={0}'>{1}</a>".format(valueElement.text(), valueElement.text()));
                                 }
                             }
-                        });
+                        });*/
                         $('#baseInfo').find(".profile-info-row").each(function () {
                             if ($(this).find('.profile-info-name:eq(0)').text() === "用户ID ：") {
                                 var valueElement = $(this).find('.profile-info-value:eq(0)');
@@ -143,7 +143,7 @@
             var remoteDateSource = function (options, callback) {
                 var parent_id = null;
                 if (!('text' in options || 'type' in options)) {
-                    parent_id = <c:out value="${member.memberNo}"/>;//load first level data
+                    parent_id = '<c:out value="${member.memberNo}"/>';//load first level data
                 }
                 else if ('type' in options && options['type'] === 'folder') {//it has children
                     if ('additionalParameters' in options && 'children' in options.additionalParameters)
@@ -170,19 +170,22 @@
             };
             $('#tree1').ace_tree({
                 dataSource: remoteDateSource,
-                multiSelect: false,
-                cacheItems: true,
-                'open-icon': 'ace-icon tree-minus',
-                'close-icon': 'ace-icon tree-plus',
+                loadingHTML: '<div class="tree-loading"><i class="ace-icon fa fa-refresh fa-spin blue"></i></div>',
+                'open-icon': 'ace-icon fa fa-user',
+                'close-icon': 'ace-icon  glyphicon  glyphicon-user',
                 'itemSelect': true,
-                'folderSelect': false,
-                'selected-icon': 'ace-icon fa fa-check',
-                'unselected-icon': 'ace-icon fa fa-times',
-                loadingHTML: '<div class="tree-loading"><i class="ace-icon fa fa-refresh fa-spin blue"></i></div>'
+                'folderSelect': true,
+                'multiSelect': false,
+                'selected-icon': null,
+                'unselected-icon': null,
+                'folder-open-icon': 'ace-icon tree-plus',
+                'folder-close-icon': 'ace-icon tree-minus'
             });
             $('#tree1').on('selected.fu.tree', function (event, data) {
                 //if(data.target)
-                showMemberInfo(JSON.parse(data.target.additionalParameters.id));
+                console.log("selected.fu.tree:"+data);
+                console.log("selected.fu.tree:"+data.target.additionalParameters.id);
+                showMemberInfo(data.target.additionalParameters.id);
             });
             /*$('#tree1').on('disclosedFolder.fu.tree', function (event, data) {
                 if(data.target)
@@ -199,7 +202,7 @@
         })
     </script>
 </head>
-<body class="no-skin">
+<body class="no-skin fuelux">
 <div class="main-container ace-save-state" id="main-container">
     <script type="text/javascript">
         try {
@@ -222,7 +225,7 @@
                                     <div class="widget-header">
                                         <h4 class="widget-title  smaller">
                                             <c:out value="${member.realName}"/> -<span class="smaller-80">
-                                            当前层级：<c:out value="${member.level}"/>
+                                            当前层级：<c:out value="${member.cur_level}"/>
                                             下级深度：<c:out value="${member.childDepth}"/>
                                             全部下级数：<c:out value="${member.childTotal}"/>
                                             直接下级数：<c:out value="${member.directCount}"/> </span>

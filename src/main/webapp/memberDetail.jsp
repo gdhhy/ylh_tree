@@ -212,7 +212,9 @@
                 $("#mask").hide();
             }
 
-            /*$.fn.dataTable.Buttons.defaults.dom.container.className = 'dt-buttons btn-overlap btn-group btn-overlap';*/
+            //$.fn.dataTable.Buttons.defaults.dom.container.className = 'dt-buttons btn-overlap btn-group btn-overlap';
+
+
         })
     </script>
     <style type="text/css">

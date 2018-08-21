@@ -8,8 +8,6 @@ create table table_config (
   交易账户		 	服务账户		 	创业账户		 	预付款账户
 */
   var_name     varchar(20),
-  sum_column varchar(50),
-  success_where varchar(50),
   query_method varchar(20),
   month        varchar(6)
 );
@@ -21,7 +19,6 @@ create table recordcount (
   config_id    int references table_config,
   member_no    varchar(100),
   record_count int,
-  sum_total decimal(18,2),
   query_time   int, -- 毫秒
   create_time  timestamp       default now()
 );
@@ -40,3 +37,5 @@ create table column_config (
   order_id         int
 
 )
+
+  child_total

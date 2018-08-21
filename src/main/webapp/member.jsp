@@ -103,7 +103,7 @@
                             render: function (data, type, row, meta) {
                                 return '<div class="hidden-sm hidden-xs action-buttons">' +
                                     '<a class="green" href="#" data-memberNo="{0}" data-username="{1}">'.format(data, row["username"]) +
-                                    '<i class="ace-icon glyphicon glyphicon-arrow-up bigger-130"></i>' +
+                                    '<i class="ace-icon fa fa-film bigger-130"></i>' +
                                     '</a>' +
                                     '</div>';
                             }
@@ -134,7 +134,7 @@
 
             myTable.on('draw', function () {
                 $('#dynamic-table tr').find('a:eq(0)').click(function () {
-                    var url = "/memberInfo.jspx?memberNo={0}".format($(this).text());
+                    var url = "/memberInfo2.jspx?memberNo={0}".format($(this).text());
                     window.open(url, "_blank");
                 });
                 $('#dynamic-table tr').find('.research').click(function () {
