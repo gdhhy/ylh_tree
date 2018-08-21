@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://192.168.100.35:3306/ylhdata?useUnicode=true&amp;characterEncoding=utf-8"/>
+        <property name="username" value="root"/>
+        <property name="password" value="Xz@12345687"/>
+        <property name="maxIdle" value="10"/>
+        <property name="initialSize" value="5"/>
+    </bean>
+    <bean id="v1DS" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://192.168.100.55:3306/yunlian?useUnicode=true&amp;characterEncoding=utf-8"/>
+        <property name="username" value="root"/>
+        <property name="password" value="123456"/>
+        <property name="maxIdle" value="5"/>
+        <property name="initialSize" value="2"/>
+    </bean>
+    <bean id="v2DS" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://192.168.100.55:3306/ERP?useUnicode=true&amp;characterEncoding=utf-8"/>
+        <property name="username" value="root"/>
+        <property name="password" value="123456"/>
+        <property name="maxIdle" value="5"/>
+        <property name="initialSize" value="2"/>
+    </bean>
+    <bean id="v3DS" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://192.168.100.55:3306/yunlian1?useUnicode=true&amp;characterEncoding=utf-8"/>
+        <property name="username" value="root"/>
+        <property name="password" value="123456"/>
+        <property name="maxIdle" value="5"/>
+        <property name="initialSize" value="2"/>
+    </bean>
+    <bean id="v4DS" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://192.168.100.85:3306/ylhdata?useUnicode=true&amp;characterEncoding=utf-8"/>
+        <property name="username" value="root"/>
+        <property name="password" value="YLH_2018.05.08"/>
+        <property name="maxIdle" value="5"/>
+        <property name="initialSize" value="3"/>
+    </bean>
+    <bean id="v4DS_2" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://192.168.100.86:3306/ylhdata?useUnicode=true&amp;characterEncoding=utf-8"/>
+        <property name="username" value="root"/>
+        <property name="password" value="YLH_2018.05.08"/>
+        <property name="maxIdle" value="5"/>
+        <property name="initialSize" value="3"/>
+    </bean>
+    <bean id="v4DS_3" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://192.168.100.83:3306/ylhdata?useUnicode=true&amp;characterEncoding=utf-8"/>
+        <property name="username" value="root"/>
+        <property name="password" value="YLH_2018.05.08"/>
+        <property name="maxIdle" value="5"/>
+        <property name="initialSize" value="3"/>
+    </bean>
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="configLocation" value="classpath:mybatis.xml"/>
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    <bean id="memberMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.zcreate.tree.dao.MemberMapper"/>
+    </bean>
+    <bean id="tableConfigMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.zcreate.ylh.dao.TableConfigMapper"/>
+    </bean>
+
+    <bean id="sqlSessionFactory_V1" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="configLocation" value="classpath:mybatis_v1v3.xml"/>
+        <property name="dataSource" ref="v1DS"/>
+    </bean>
+    <bean id="sqlSessionFactory_V2" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="configLocation" value="classpath:mybatis_v2.xml"/>
+        <property name="dataSource" ref="v2DS"/>
+    </bean>
+    <bean id="sqlSessionFactory_V3" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="configLocation" value="classpath:mybatis_v1v3.xml"/>
+        <property name="dataSource" ref="v3DS"/>
+    </bean>
+    <bean id="sqlSessionFactory_V4" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="configLocation" value="classpath:mybatis_v4.xml"/>
+        <property name="dataSource" ref="v4DS"/>
+    </bean>
+    <bean id="sqlSessionFactory_V4_2" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="configLocation" value="classpath:mybatis_v4.xml"/>
+        <property name="dataSource" ref="v4DS_2"/>
+    </bean>
+    <bean id="sqlSessionFactory_V4_3" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="configLocation" value="classpath:mybatis_v4.xml"/>
+        <property name="dataSource" ref="v4DS_3"/>
+    </bean>
+
+    <bean id="ylhV1Mapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory_V1"/>
+        <property name="mapperInterface" value="com.zcreate.ylh.dao.YlhMapper"/>
+    </bean>
+    <bean id="ylhV2Mapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory_V2"/>
+        <property name="mapperInterface" value="com.zcreate.ylh.dao.YlhMapper"/>
+    </bean>
+    <bean id="ylhV3Mapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory_V3"/>
+        <property name="mapperInterface" value="com.zcreate.ylh.dao.YlhMapper"/>
+    </bean>
+    <bean id="ylhV4Mapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory_V4"/>
+        <property name="mapperInterface" value="com.zcreate.ylh.dao.YlhMapper"/>
+    </bean>
+    <bean id="ylhV4_2Mapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory_V4_2"/>
+        <property name="mapperInterface" value="com.zcreate.ylh.dao.YlhMapper"/>
+    </bean>
+    <bean id="ylhV4_3Mapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory_V4_3"/>
+        <property name="mapperInterface" value="com.zcreate.ylh.dao.YlhMapper"/>
+    </bean>
+    <context:component-scan base-package="com.zcreate.ylh.service"/>
+</beans>

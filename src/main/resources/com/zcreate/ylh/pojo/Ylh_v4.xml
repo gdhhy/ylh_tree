@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zcreate.ylh.dao.YlhMapper">
+    <cache eviction="LRU" readOnly="true" flushInterval="86400000" size="10000"/>
+    <sql id="queryWhere">
+        <where>
+            <if test="param.memberNo!=null">AND m_uid = #{param.memberNo:VARCHAR}</if>
+        </where>
+    </sql>
+    <sql id="pagingSql">
+        <choose>
+            <when test="param.start>0 and param.length >0">
+                limit #{param.start:INTEGER},#{param.length:INTEGER}
+            </when>
+            <when test="param.length >0">
+                limit #{param.length:INTEGER}
+            </when>
+            <otherwise>
+                limit 1000
+            </otherwise>
+        </choose>
+    </sql>
+    <select id="getRecordCount" resultType="int" parameterType="java.util.Map" useCache="false">
+        SELECT count(*) recordcount FROM ${param.tableName}
+        <include refid="queryWhere"/>
+    </select>
+    <select id="selectPoint" resultType="java.util.Map" parameterType="java.util.Map" useCache="true">
+        select uid 序列,type 积分类型, m_uid 会员uid,m_id 会员id, sn 流水号, point_add 收支金额, point_left 余额, point_reason 备注, to_id 来源id,
+        FROM_UNIXTIME(register_date,'%Y-%m-%d %H:%i:%S') 工单时间,cur_day 确认时间, `status` 状态
+        from ${param.tableName}
+        <include refid="queryWhere"/>
+        <include refid="pagingSql"/>
+    </select>
+    <select id="selectAccount" resultType="java.util.Map" parameterType="java.util.Map" useCache="true">
+        select uid 序列,type 积分类型, m_uid 会员uid,m_id 会员id, sn 流水号, money_add 收支金额, money_left 余额, money_reason 备注, to_id 来源id,
+        FROM_UNIXTIME(register_date,'%Y-%m-%d %H:%i:%S') 工单时间,cur_day 确认时间, `status` 状态
+        from ${param.tableName}
+        <include refid="queryWhere"/>
+        <include refid="pagingSql"/>
+    </select>
+    <select id="selectWithdraw" resultType="java.util.Map" parameterType="java.util.Map" useCache="true">
+        select uid 序列,sn 流水号,money 提现金额,money_real 实际提现金额, m_uid 会员uid,type 类型,FROM_UNIXTIME(register_date,'%Y-%m-%d %H:%i:%S')  提现时间,`status` 状态,
+        member_name 会员姓名,bank 提现银行,surbranch 银行地址,province 省, city 市,county 区县,account 提现账号
+        from withdraw_list
+        <include refid="queryWhere"/>
+        <include refid="pagingSql"/>
+    </select>
+</mapper>

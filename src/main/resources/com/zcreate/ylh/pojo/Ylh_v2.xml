@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zcreate.ylh.dao.YlhMapper">
+    <cache eviction="LRU" readOnly="true" flushInterval="86400000" size="10000"/>
+    <sql id="queryWhere">
+        <where>
+            <choose>
+                <when test='param.username!=null and param.tableName == "t_account_cash_out"'>AND co_uid = #{param.username:VARCHAR}</when>
+                <when test='param.username!=null and param.tableName.indexOf("_score_")!=-1'>AND sc_toUser = #{param.username:VARCHAR}</when>
+                <when test='param.username!=null and param.tableName.indexOf("_cash_")!=-1'>AND ca_toUser = #{param.username:VARCHAR}</when>
+            </choose>
+        </where>
+    </sql>
+    <sql id="pagingSql">
+        <choose>
+            <when test="param.start>0 and param.length >0">
+                limit #{param.start:INTEGER},#{param.length:INTEGER}
+            </when>
+            <when test="param.length >0">
+                limit #{param.length:INTEGER}
+            </when>
+            <otherwise>
+                limit 1000
+            </otherwise>
+        </choose>
+    </sql>
+    <select id="getRecordCount" resultType="int" parameterType="java.util.Map" useCache="false">
+        SELECT count(*) recordcount FROM ${param.tableName}
+        <include refid="queryWhere"/>
+    </select>
+    <select id="selectPoint" resultType="java.util.Map" parameterType="java.util.Map" useCache="true">
+        select sc_id '时间id', sc_from '操作账户', sc_fromUser '操作账户会员名称', sc_fromFlag '账户类型', sc_to '来源账户',
+        sc_toUser 会员id, sc_toFlag '接收子账户', sc_score '收支金额', b.bu_name '业务类型', sc_channel '通道（伙伴标识）',
+        sc_isSelf '是否内部&lt;br/>账号流转', sc_isCross '是否跨现金子账户&lt;br/>和积分子账户', FROM_UNIXTIME(sc_createTime,'%Y-%m-%d %H:%i:%S') '创建时间', sc_operId '经办人id', sc_orderId '关联订单id',
+        cast(sc_state  as SIGNED int) '状态', sc_fBalance '发起账户余额', sc_tBalance '接收账户余额', sc_memo '备注',
+        sc_source '来源用户id',sc_sourceUser '来源用户', FROM_UNIXTIME(sc_updateTime,'%Y-%m-%d %H:%i:%S') '最后更新时间'
+        from ${param.tableName} a, t_business b
+        where a.sc_businessId = b.bu_id
+        <if test="param.username!=null">and sc_toUser = #{param.username:VARCHAR}</if>
+        <include refid="pagingSql"/>
+    </select>
+    <select id="selectAccount" resultType="java.util.Map" parameterType="java.util.Map" useCache="true">
+        select ca_id '时间id', ca_from '操作账户', ca_fromUser '操作账户用户名', ca_fromFlag '操作子账户', ca_to '来源账户',
+        ca_toUser '会员id', ca_toFlag '来源子账户', ca_money '收支金额', b.bu_name '业务类型', ca_channel '通道（伙伴标识）',
+        ca_isSelf '是否内部&lt;br/>账户流转', ca_isCross '是否跨现金子账户&lt;br/>和积分子账户',FROM_UNIXTIME(ca_createTime,'%Y-%m-%d %H:%i:%S') '创建时间', ca_operId '经办人id', ca_orderId '关联订单id',
+        cast(ca_state  as SIGNED int) '状态', ca_fBalance '发起账户余额', ca_tBalance '接收账户余额', ca_memo '备注',
+        ca_source '来源用户id', ca_sourceUser '来源用户', FROM_UNIXTIME(ca_updateTime,'%Y-%m-%d %H:%i:%S') '最后更新时间'
+        from ${param.tableName} a, t_business b
+        where a.ca_businessId = b.bu_id
+        <if test="param.username!=null">and ca_toUser = #{param.username:VARCHAR}</if>
+        <include refid="pagingSql"/>
+    </select>
+    <select id="selectWithdraw" resultType="java.util.Map" parameterType="java.util.Map" useCache="true">
+        select co_caid '异动记录id', co_uid '会员id号', FROM_UNIXTIME(co_arriveDateTime,'%Y-%m-%d %H:%i:%S') '到账时间', co_money '提现金额', co_tax '提现手续费',
+        co_toCardType '提现类型，2 支付宝 ，0 银行卡', co_account '账户', co_cardmaster '户主名', co_state '状态:0-默认;1-成功;-1-撤销',
+        cl_reason '原因', cl_memo '备注', b.aex_bankname '提现类型名称', b.aex_account '提现账号', aex_province '开户行省', aex_city '开户行市',
+        aex_cardaddr '开户行地址', aex_cardmaster '户主'
+        from t_account_cash_out a, t_accountex b
+        where a.co_aexId = b.aex_id
+        <if test="param.username!=null">and co_uid = #{param.username:VARCHAR}</if>
+        <include refid="pagingSql"/>
+    </select>
+</mapper>

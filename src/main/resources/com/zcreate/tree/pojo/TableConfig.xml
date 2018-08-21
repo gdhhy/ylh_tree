@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zcreate.ylh.dao.TableConfigMapper">
+    <cache eviction="LRU" readOnly="true" flushInterval="86400000" size="10000"/>
+    <resultMap id="TableConfigResult" type="com.zcreate.ylh.pojo.TableConfig">
+        <result column="config_id" jdbcType="INTEGER" property="configID"/>
+        <result column="table_name" jdbcType="VARCHAR" property="tableName"/>
+        <result column="version" jdbcType="VARCHAR" property="version"/>
+        <result column="data_type" jdbcType="VARCHAR" property="dataType"/>
+        <result column="var_name" jdbcType="VARCHAR" property="varName"/>
+        <result column="query_method" jdbcType="VARCHAR" property="queryMethod"/>
+        <result column="month" jdbcType="VARCHAR" property="month"/>
+    </resultMap>
+    <sql id="queryWhere">
+        <where>
+            <if test="param.tableName!=null">AND table_name = #{param.tableName:VARCHAR}</if>
+            <if test="param.version!=null">AND version = #{param.version:VARCHAR}</if>
+            <if test="param.dataType!=null">AND data_type = #{param.dataType:VARCHAR}</if>
+            <if test="param.month!=null">AND month = #{param.month:VARCHAR}</if>
+            <if test="param.memberNo!=null">AND config_id not in
+                (select config_id from recordcount where member_no = #{param.memberNo:VARCHAR})
+            </if>
+        </where>
+    </sql>
+    <select id="getTableConfigCount" resultType="int" parameterType="java.util.Map" useCache="true">
+        SELECT count(*) FROM table_config
+        <include refid="queryWhere"/>
+    </select>
+    <select id="selectTableConfig" resultMap="TableConfigResult" parameterType="java.util.Map" useCache="true">
+        SELECT config_id,table_name,version,data_type,var_name,query_method,month FROM table_config
+        <include refid="queryWhere"/>
+    </select>
+    <select id="selectNotCountTableConfig" resultMap="TableConfigResult" parameterType="java.util.Map" useCache="true">
+        SELECT config_id,table_name,version,data_type,var_name,query_method,month FROM table_config
+        <include refid="queryWhere"/>
+    </select>
+    <select id="selectDistinctVariable" resultType="string" useCache="true">
+        SELECT distinct var_name
+        FROM table_config
+    </select>
+
+
+    <resultMap id="RecordCountResult" type="com.zcreate.ylh.pojo.RecordCount">
+        <result column="count_id" jdbcType="INTEGER" property="countID"/>
+        <result column="config_id" jdbcType="INTEGER" property="configID"/>
+        <result column="member_no" jdbcType="VARCHAR" property="memberNo"/>
+        <result column="record_count" jdbcType="INTEGER" property="recordCount"/>
+        <result column="query_time" jdbcType="INTEGER" property="queryTime"/>
+        <result column="create_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="table_name" jdbcType="VARCHAR" property="tableName"/>
+        <result column="version" jdbcType="VARCHAR" property="version"/>
+        <result column="data_type" jdbcType="VARCHAR" property="dataType"/>
+    </resultMap>
+    <sql id="queryWhere2">
+        <where>
+            <if test="param.memberNo!=null">AND A.member_no = #{param.memberNo:VARCHAR}</if>
+            <if test="param.version!=null">AND B.version = #{param.version:VARCHAR} and A.record_count>0</if>
+            <if test="@com.zcreate.Ognl@isNotEmpty(param.dataType)">AND B.data_type = #{param.dataType:VARCHAR}</if>
+        </where>
+    </sql>
+    <select id="selectRecordCount" resultMap="RecordCountResult" parameterType="java.util.Map" useCache="true">
+        SELECT A.count_id,A.config_id,A.member_no,A.record_count,A.query_time,A.create_time,B.table_name,B.version,B.data_type
+        FROM recordcount A left join table_config B on A.config_id=B.config_id
+        <include refid="queryWhere2"/>
+    </select>
+    <insert id="insertRecordCount" parameterType="com.zcreate.ylh.pojo.RecordCount" flushCache="true" useGeneratedKeys="true" keyProperty="pojo.countID">
+        insert into recordcount(config_id, member_no, record_count, query_time)
+        values (#{pojo.configID:INTEGER}, #{pojo.memberNo:VARCHAR}, #{pojo.recordCount:INTEGER}, #{pojo.queryTime:INTEGER})
+    </insert>
+
+
+    <select id="selectTableNameOption" resultType="java.util.Map" parameterType="java.util.Map" useCache="true">
+        SELECT B.table_name value,concat(B.table_name,' (',A.record_count,')') name ,A.record_count recordCount
+        FROM recordcount A left join table_config B on A.config_id=B.config_id
+        <include refid="queryWhere2"/>
+        group by B.table_name order by B.table_name
+    </select>
+    <select id="selectDataTypeOption" resultType="java.util.Map" parameterType="java.util.Map" useCache="true">
+        SELECT B.data_type value, concat(B.data_type,' (',sum(A.record_count),')') name,sum(A.record_count) recordCount
+        FROM recordcount A left join table_config B on A.config_id=B.config_id
+        <include refid="queryWhere2"/>
+        group by B.data_type order by B.data_type
+    </select>
+</mapper>
