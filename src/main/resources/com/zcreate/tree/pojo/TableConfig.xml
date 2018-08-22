@@ -71,7 +71,7 @@
 
 
     <select id="selectTableNameOption" resultType="java.util.Map" parameterType="java.util.Map" useCache="true">
-        SELECT B.table_name value,concat(B.table_name,' (',A.record_count,')') name ,A.record_count recordCount
+        SELECT B.table_name value,concat(B.table_name,' (',sum(A.record_count),')') name,sum(A.record_count) recordCount
         FROM recordcount A left join table_config B on A.config_id=B.config_id
         <include refid="queryWhere2"/>
         group by B.table_name order by B.table_name

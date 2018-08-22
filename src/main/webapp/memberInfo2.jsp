@@ -261,6 +261,7 @@
                                     <div class="widget-header">
                                         <h4 class="widget-title  smaller">
                                             <c:out value="${member.username}"/> -<span class="smaller-80">
+                                            证件号：<c:out value="${member.idCard}"/>
                                             当前层级：<c:out value="${member.curLevel}"/>
                                             下级深度：<c:out value="${member.childDepth}"/>
                                             全部下级数：<c:out value="${member.childTotal}"/>
