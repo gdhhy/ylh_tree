@@ -88,7 +88,7 @@
                     if (result.data.length > 0) {
                         var memberInfo = JSON.parse(result.data[0].memberInfo);
                         var html = "";
-                        html += row.format("用户名：", result.data[0].realName, "证件号：", result.data[0].idCard);
+                        html += row.format("用户名：", result.data[0].username, "证件号：", result.data[0].idCard);
                         html += row.format("用户ID ：", result.data[0].memberNo, "手机号码：", result.data[0].phone);
 
                         html += row.format("当前层级：", result.data[0].curLevel, "下级深度：", result.data[0].childDepth);
@@ -260,7 +260,7 @@
                                 <div class="widget-box widget-color-blue2">
                                     <div class="widget-header">
                                         <h4 class="widget-title  smaller">
-                                            <c:out value="${member.realName}"/> -<span class="smaller-80">
+                                            <c:out value="${member.username}"/> -<span class="smaller-80">
                                             当前层级：<c:out value="${member.curLevel}"/>
                                             下级深度：<c:out value="${member.childDepth}"/>
                                             全部下级数：<c:out value="${member.childTotal}"/>

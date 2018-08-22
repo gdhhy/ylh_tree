@@ -215,7 +215,7 @@
                             if ($(this).find('.profile-info-name:eq(0)').text() === "用户ID ：") {
                                 var valueElement = $(this).find('.profile-info-value:eq(0)');
 
-                                valueElement.html("<a href='memberInfo.jspx?memberNo={0}'>{1}</a>".format(valueElement.text(), valueElement.text()));
+                                valueElement.html("<a href='memberInfo2.jspx?memberNo={0}'>{1}</a>".format(valueElement.text(), valueElement.text()));
                             }
                         });
                     }

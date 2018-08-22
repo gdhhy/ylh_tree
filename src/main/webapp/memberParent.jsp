@@ -110,7 +110,7 @@
 
             myTable.on('draw', function () {
                 $('#dynamic-table tr').find('.showMemberInfo').click(function () {
-                    var url = "/memberInfo.jspx?memberNo={0}".format(memberNo);
+                    var url = "/memberInfo2.jspx?memberNo={0}".format(memberNo);
                     window.open(encodeURI(encodeURI(url)), "_blank");
                 });
 
