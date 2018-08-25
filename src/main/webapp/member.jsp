@@ -43,11 +43,16 @@
     <%--<script src="js/jquery.form.js"></script>--%>
     <script src="js/func.js"></script>
 
+    <script src="js/common.js"></script>
     <link rel="stylesheet" href="css/jqueryui/jquery-ui.min.css"/>
     <link rel="stylesheet" href="components/jquery-ui.custom/jquery-ui.custom.css"/>
 
     <script type="text/javascript">
         jQuery(function ($) {
+            var memberNos = $.getUrlParam("memberNos");
+            var url = "/listMember.jspx";
+            if (memberNos !== null) url += '?memberNos=' + memberNos;
+            //console.log('memberNos='+memberNos);
             var myTable = $('#dynamic-table')
             //.wrap("<div class='dataTables_borderWrap' />")   //if you are applying horizontal scrolling (sScrollX)
                 .DataTable({
@@ -103,7 +108,7 @@
                             render: function (data, type, row, meta) {
                                 return '<div class="hidden-sm hidden-xs action-buttons">' +
                                     '<a class="green" href="#" data-memberNo="{0}" data-username="{1}">'.format(data, row["username"]) +
-                                    '<i class="ace-icon fa fa-film bigger-130"></i>' +
+                                    '<i class="ace-icon glyphicon glyphicon-arrow-up bigger-130"></i>' +
                                     '</a>' +
                                     '</div>';
                             }
@@ -125,8 +130,8 @@
                         url: '/js/datatables/datatables.chinese.json'
                     },
                     searching: false,
-                    scrollY:        '58vh',
-                    "ajax": "/listMember.jspx",
+                    scrollY: '58vh',
+                    "ajax": url,
                     "processing": true,
                     "serverSide": true,
                     select: {style: 'single'}

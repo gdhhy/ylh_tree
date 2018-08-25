@@ -69,6 +69,7 @@ public class MemberController implements ApplicationContextAware {
     @ResponseBody
     @RequestMapping(value = "/listMember", method = RequestMethod.GET, produces = "text/html;charset=UTF-8")
     public String listMember(@RequestParam(value = "memberNo", required = false) String memberNo,
+                             @RequestParam(value = "memberNos", required = false) String memberNos,
                              @RequestParam(value = "phone", required = false) String phone,
                              @RequestParam(value = "idCard", required = false) String idCard,
                              @RequestParam(value = "parentNo", required = false) String parentNo,
@@ -86,6 +87,8 @@ public class MemberController implements ApplicationContextAware {
         log.debug("memberNo={}", memberNo);*/
         Map<String, Object> param = new HashMap<>();
         param.put("memberNo", memberNo);
+        if (memberNos != null && memberNos.indexOf(",") > 0)
+            param.put("memberNos", memberNos.split(","));
         param.put("phone", phone);
         param.put("idCard", idCard);
         param.put("realName", realName);
@@ -142,7 +145,7 @@ public class MemberController implements ApplicationContextAware {
         //List<Map<String, Object>> oj = new List<HashMap<>>();
         for (Member member : members) {
             Map<String, Object> item = new HashMap<>();
-            String baseText = "层级:"+member.getCurLevel()+"，"+ member.getUsername() + "，证件号：" + member.getIdCard() + "，手机：" + member.getPhone();
+            String baseText = "层级:" + member.getCurLevel() + "，" + member.getUsername() + "，证件号：" + member.getIdCard() + "，手机：" + member.getPhone();
             if (member.getDirectCount() > 0) {
                 baseText += "，下级深度：" + member.getChildDepth() + "，下级总数：" + member.getChildTotal();
                 item.put("type", "folder");

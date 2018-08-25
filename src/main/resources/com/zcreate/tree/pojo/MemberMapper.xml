@@ -20,6 +20,13 @@
     <sql id="queryWhere">
         <where>
             <if test="param.memberNo!=null">AND member_no = #{param.memberNo:VARCHAR}</if>
+            <if test="@com.zcreate.Ognl@isNotEmpty(param.memberNos)">
+                AND member_no in
+                <foreach item="item" index="index" collection="param.memberNos"
+                         open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
             <if test="param.username!=null">AND user_name = #{param.username:VARCHAR}</if>
             <if test="param.realName!=null">AND real_name = #{param.realName:VARCHAR}</if>
             <if test="param.phone!=null">AND phone = #{param.phone:VARCHAR}</if>
@@ -37,7 +44,7 @@
         member_id, member_no, user_name,real_name, id_card, phone, member_info, parent_no, cur_level, child_total, child_depth, direct_count
         FROM member_v4
         <include refid="queryWhere"/>
-        <if test="@com.zcreate.Ognl@isNotEmpty(param.orderBy)"> order by ${param.orderBy}</if>
+        <if test="@com.zcreate.Ognl@isNotEmpty(param.orderBy)">order by ${param.orderBy}</if>
         <choose>
             <when test="param.start>0 and param.length >0">
                 limit #{param.start:INTEGER},#{param.length:INTEGER}
@@ -54,9 +61,10 @@
         SELECT
         member_id, member_no, user_name,real_name, id_card, phone, member_info, parent_no, cur_level, child_total, child_depth, direct_count
         FROM member_v4
-        <include refid="queryWhere"/>  limit 1
+        <include refid="queryWhere"/>
+        limit 1
     </select>
     <select id="selectParent" resultType="java.util.Map" parameterType="java.util.Map" statementType="CALLABLE">
-        call findParent(#{param.username,jdbcType=VARCHAR,mode=IN},#{param.maxlevel,jdbcType=INTEGER,mode=IN})
+        call findParent(#{param.username,jdbcType=VARCHAR,mode=IN}, #{param.maxlevel,jdbcType=INTEGER,mode=IN})
     </select>
 </mapper>
