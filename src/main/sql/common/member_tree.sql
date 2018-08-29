@@ -21,7 +21,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- Table structure for member
 -- ----------------------------
 DROP TABLE IF EXISTS member_tree;
-CREATE TABLE member_tree_0731  (
+CREATE TABLE member_tree  (
   member_id int(11) NOT NULL AUTO_INCREMENT,
   member_no varchar(26) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   user_name varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
@@ -30,10 +30,10 @@ CREATE TABLE member_tree_0731  (
   phone varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   member_info varchar(1023) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   parent_no varchar(26) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  cur_level int(11) NULL DEFAULT 0,
-  child_total int(11) NULL DEFAULT 0,
-  child_depth int(11) NULL DEFAULT 0,
-  direct_count int(11) NULL DEFAULT 0,
+  cur_level int(11) NULL DEFAULT 0, -- 所在层级
+  child_total int(11) NULL DEFAULT 0, -- 下级总数
+  child_depth int(11) NULL DEFAULT 0, -- 下级深度
+  direct_count int(11) NULL DEFAULT 0, -- 直接下级数
   PRIMARY KEY (member_id) USING BTREE,
   INDEX ix_user_name(user_name) USING BTREE,
   INDEX ix_memberno(member_no) USING BTREE,
