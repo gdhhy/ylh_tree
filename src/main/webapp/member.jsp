@@ -58,7 +58,6 @@
                 .DataTable({
                     bAutoWidth: false,
                     "columns": [
-                        {"data": "memberId", "sClass": "center"},
                         {"data": "memberNo", "sClass": "center"},
                         {"data": "username", "sClass": "center"},
                         {"data": "idCard", "sClass": "center"},
@@ -68,43 +67,42 @@
                         {"data": "childTotal", "sClass": "center"},
                         {"data": "childDepth", "sClass": "center"},
                         {"data": "directCount", "sClass": "center"},
-                        {"data": "memberNo", "sClass": "center"},
-                        {"data": "memberNo", "sClass": "center"}
+                        {"data": "memberNo", "sClass": "center"}/*,
+                        {"data": "memberNo", "sClass": "center"}*/
                     ],
 
                     'columnDefs': [
-                        {"orderable": false, "searchable": false, className: 'text-center', "targets": 0},
                         {
-                            "orderable": false, className: 'text-center', "targets": 1, render: function (data, type, row, meta) {
+                            "orderable": false, className: 'text-center', "targets": 0, render: function (data, type, row, meta) {
                                 return '<a href="#" name="memberNo">{0}</a>'.format(data);
                             }
                         },
                         {
-                            "orderable": false, className: 'text-center', "targets": 2/*, render: function (data, type, row, meta) {
+                            "orderable": false, className: 'text-center', "targets": 1/*, render: function (data, type, row, meta) {
                                 return '<a href="#" class="research" name="username">{0}</a>'.format(data);
                             }*/
                         },
                         {
-                            "orderable": false, className: 'text-center', "targets": 3/*, render: function (data, type, row, meta) {
+                            "orderable": false, className: 'text-center', "targets": 2/*, render: function (data, type, row, meta) {
                                 return '<a href="#"  class="research" name="idCard">{0}</a>'.format(data);
                             }*/
                         },
                         {
-                            "orderable": false, className: 'text-center', "targets": 4/*, render: function (data, type, row, meta) {
+                            "orderable": false, className: 'text-center', "targets": 3/*, render: function (data, type, row, meta) {
                                 return '<a href="#" class="research" name="phone">{0}</a>'.format(data);
                             }*/
                         },
                         {
-                            "orderable": false, "searchable": false, className: 'text-center', "targets": 5, render: function (data, type, row, meta) {
+                            "orderable": false, "searchable": false, className: 'text-center', "targets": 4, render: function (data, type, row, meta) {
                                 return '<a href="#" class="research" name="parentNo">{0}</a>'.format(data);
                             }
                         },
-                        {"orderable": false, 'targets': 6, 'searchable': false},
+                        {"orderable": false, 'targets': 5, 'searchable': false},
+                        {"orderable": false, "searchable": false, className: 'text-center', "targets": 6},
                         {"orderable": false, "searchable": false, className: 'text-center', "targets": 7},
-                        {"orderable": false, "searchable": false, className: 'text-center', "targets": 8},
-                        {"orderable": false, 'searchable': false, 'targets': 9},
+                        {"orderable": false, 'searchable': false, 'targets': 8},
                         {
-                            "orderable": false, 'searchable': false, 'targets': 10,
+                            "orderable": false, 'searchable': false, 'targets': 9,
                             render: function (data, type, row, meta) {
                                 return '<div class="hidden-sm hidden-xs action-buttons">' +
                                     '<a class="green" href="#" data-memberNo="{0}" data-username="{1}">'.format(data, row["username"]) +
@@ -112,9 +110,9 @@
                                     '</a>' +
                                     '</div>';
                             }
-                        },
+                        }/*,
                         {
-                            "orderable": false, 'searchable': false, 'targets': 11,
+                            "orderable": false, 'searchable': false, 'targets': 10,
                             render: function (data, type, row, meta) {
                                 return '<div class="hidden-sm hidden-xs action-buttons">' +
                                     '<a class="green" href="#" data-memberNo="{0}" data-username="{1}">'.format(data, row["username"]) +
@@ -122,7 +120,7 @@
                                     '</a>' +
                                     '</div>';
                             }
-                        }
+                        }*/
                     ],
                     "aLengthMenu": [[20, 100], ["20", "100"]],//二组数组，第一组数量，第二组说明文字;
                     "aaSorting": [],//"aaSorting": [[ 4, "desc" ]],//设置第5个元素为默认排序
@@ -152,10 +150,10 @@
                     var url = "/memberParent.jsp?memberNo={0}&username={1}".format($(this).attr("data-memberNo"), $(this).attr("data-username"));
                     window.open(encodeURI(encodeURI(url)), "_blank");
                 });
-                $('#dynamic-table tr').find('a:eq(3)').click(function () {
+               /* $('#dynamic-table tr').find('a:eq(3)').click(function () {
                     var url = "/memberRecordCount.jsp?memberNo={0}&username={1}".format($(this).attr("data-memberNo"), $(this).attr("data-username"));
                     window.open(encodeURI(encodeURI(url)), "_blank");
-                });
+                });*/
             });
             $('.btn-success').click(function () {
                 search();
@@ -233,9 +231,9 @@
             <div class="breadcrumbs" id="breadcrumbs">
                 <ul class="breadcrumb">
                     <form class="form-search form-inline">
-                        <label>用户ID ：</label>
+                        <label>UID ：</label>
                         <input type="text" name="memberNo" placeholder="用户ID……" class="nav-search-input" autocomplete="off"/>
-                        用户名：
+                        会员ID：
                         <input type="text" name="username" placeholder="用户名……" class="nav-search-input" autocomplete="off"/>
                         证件号：
                         <input type="text" name="idCard" placeholder="证件号……" class="nav-search-input" autocomplete="off"/>
@@ -281,18 +279,17 @@
                                     <table id="dynamic-table" class="table table-striped table-bordered table-hover">
                                         <thead>
                                         <tr>
-                                            <th></th>
-                                            <th>用户ID</th>
-                                            <th>用户名</th>
+                                            <th>UID</th>
+                                            <th>会员ID</th>
                                             <th>证件号</th>
                                             <th>手机号</th>
-                                            <th>上级ID</th>
+                                            <th>上级UID</th>
                                             <th>当前层级</th>
                                             <th>下级总数</th>
                                             <th>最深级数</th>
                                             <th>直接下级数</th>
                                             <th>查看上线</th>
-                                            <th>积分账户流水</th>
+                                            <%--<th>积分账户流水</th>--%>
                                         </tr>
                                         </thead>
                                     </table>

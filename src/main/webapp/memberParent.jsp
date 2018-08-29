@@ -60,9 +60,9 @@
                     bAutoWidth: false,
                     "columns": [
                         {"data": "所在层级", "sClass": "center"},
-                        {"data": "用户ID", "sClass": "center"},
-                        {"data": "用户名", "sClass": "center"},
-                        {"data": "推荐人", "sClass": "center", defaultContent: ""},
+                        {"data": "UID", "sClass": "center"},
+                        {"data": "会员ID", "sClass": "center"},
+                        {"data": "推荐人会员ID", "sClass": "center", defaultContent: ""},
                         {"data": "身份证号", "sClass": "center"},
                         {"data": "电话", "sClass": "center"},
                         {"data": "用户ID", "sClass": "center"}
@@ -71,13 +71,13 @@
                     'columnDefs': [
                         {"orderable": false, className: 'text-center', "targets": 0, title: '层级'},
                         {
-                            "orderable": true, className: 'text-center', "targets": 1, title: '用户ID',
+                            "orderable": true, className: 'text-center', "targets": 1, title: 'UID',
                             render: function (data, type, row, meta) {
                                 return '<a  href="#" class="showMemberInfo" >{0}</a>'.format(data);
                             }
                         },
-                        {"orderable": true, className: 'text-center', "targets": 2, title: '用户名'},
-                        {"orderable": true, className: 'text-center', "targets": 3, title: '推荐人'},
+                        {"orderable": true, className: 'text-center', "targets": 2, title: '会员ID'},
+                        {"orderable": true, className: 'text-center', "targets": 3, title: '推荐人会员ID'},
                         {"orderable": true, className: 'text-center', "targets": 4, title: '身份证号'},
                         {"orderable": true, className: 'text-center', "targets": 5, title: '电话'},
                         {

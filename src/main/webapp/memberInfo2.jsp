@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8"/>
-    <title>传销查询系统</title>
+    <title>云联惠传销查询系统</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
 
     <!-- bootstrap & fontawesome -->
@@ -88,8 +88,8 @@
                     if (result.data.length > 0) {
                         var memberInfo = JSON.parse(result.data[0].memberInfo);
                         var html = "";
-                        html += row.format("用户名：", result.data[0].username, "证件号：", result.data[0].idCard);
-                        html += row.format("用户ID ：", result.data[0].memberNo, "手机号码：", result.data[0].phone);
+                        html += row.format("会员ID：", result.data[0].username, "证件号：", result.data[0].idCard);
+                        html += row.format("UID：", result.data[0].memberNo, "手机号码：", result.data[0].phone);
 
                         html += row.format("当前层级：", result.data[0].curLevel, "下级深度：", result.data[0].childDepth);
                         html += row.format("全部下级数：", result.data[0].childTotal, " 直接下级数：", result.data[0].directCount);
