@@ -63,3 +63,13 @@ update tt6 set  `地址`=REPLACE(`地址`,'	','');-- 32
 update  tt6 set `地址`='乌鲁木齐市水磨沟区南湖东路北一巷1号5号楼3单元401室' where `会员uid`= '0000000000_0001069511_0000';
 
 update tt6 set  `提现银行账号`=REPLACE(`提现银行账号`,'	','');-- 4
+
+
+select A.*,B.w_point `w_point(sys_sta_per_day)`,B.w_point_out `w_point_out(sys_sta_per_day)`  from
+(select cur_day,sum(case when point_add>0 then point_add else 0 end) `point_add(w_point_table)`,
+sum(case when point_add<0 then point_add else 0 end)  `point_add_out(w_point_table)`
+from wpoint_table_201805 where cur_day>='20180503' and cur_day<'20180508' group by cur_day) A
+left join
+(SELECT from_unixtime(day_stamp+60*60*24,'%Y%m%d') daystamp,w_point ,w_point_out
+FROM `sys_sta_per_day` where day_stamp>=1525363200  and day_stamp<1525708800  order by day_stamp) B
+on A.cur_day=B.daystamp

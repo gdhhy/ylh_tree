@@ -100,7 +100,7 @@ public class MemberController implements ApplicationContextAware {
             param.put("length", length);
         List<Member> members = memberMapper.selectMember(param);
         int recordCount;
-        if (Ognl.isEmpty(memberNo) && Ognl.isEmpty(phone) && Ognl.isEmpty(idCard) &&
+        if (Ognl.isEmpty(memberNo) && Ognl.isEmpty(phone) && Ognl.isEmpty(idCard) && Ognl.isEmpty(memberNos) &&
                 Ognl.isEmpty(realName) && Ognl.isEmpty(username) && Ognl.isEmpty(parentNo) &&
                 (Boolean.FALSE == threeThirty || null == threeThirty))
             recordCount = 8958637;
