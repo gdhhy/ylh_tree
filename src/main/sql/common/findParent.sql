@@ -26,7 +26,7 @@ BEGIN
 			call recurParent_v3(@member_no, p_maxlevel);
 		end if;
 
-    select cur_level '所在层级', user_name '用户名', parent_name '推荐人', id_card '身份证号', phone '电话' from tmp_table order by cur_level desc;
+    select cur_level '所在层级', user_name '会员ID', parent_name '推荐人', id_card '身份证号', phone '电话' from tmp_table order by cur_level desc;
 
     --  select * from tmp_table;
 

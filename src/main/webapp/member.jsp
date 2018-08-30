@@ -58,6 +58,7 @@
                 .DataTable({
                     bAutoWidth: false,
                     "columns": [
+                        {"data": "memberId", "sClass": "center"},
                         {"data": "memberNo", "sClass": "center"},
                         {"data": "username", "sClass": "center"},
                         {"data": "idCard", "sClass": "center"},
@@ -72,37 +73,38 @@
                     ],
 
                     'columnDefs': [
+                        {"orderable": false, "searchable": false, className: 'text-center', "targets": 0},
                         {
-                            "orderable": false, className: 'text-center', "targets": 0, render: function (data, type, row, meta) {
+                            "orderable": false, className: 'text-center', "targets": 1, render: function (data, type, row, meta) {
                                 return '<a href="#" name="memberNo">{0}</a>'.format(data);
                             }
                         },
                         {
-                            "orderable": false, className: 'text-center', "targets": 1/*, render: function (data, type, row, meta) {
+                            "orderable": false, className: 'text-center', "targets": 2/*, render: function (data, type, row, meta) {
                                 return '<a href="#" class="research" name="username">{0}</a>'.format(data);
                             }*/
                         },
                         {
-                            "orderable": false, className: 'text-center', "targets": 2/*, render: function (data, type, row, meta) {
+                            "orderable": false, className: 'text-center', "targets": 3/*, render: function (data, type, row, meta) {
                                 return '<a href="#"  class="research" name="idCard">{0}</a>'.format(data);
                             }*/
                         },
                         {
-                            "orderable": false, className: 'text-center', "targets": 3/*, render: function (data, type, row, meta) {
+                            "orderable": false, className: 'text-center', "targets": 4/*, render: function (data, type, row, meta) {
                                 return '<a href="#" class="research" name="phone">{0}</a>'.format(data);
                             }*/
                         },
                         {
-                            "orderable": false, "searchable": false, className: 'text-center', "targets": 4, render: function (data, type, row, meta) {
+                            "orderable": false, "searchable": false, className: 'text-center', "targets": 5, render: function (data, type, row, meta) {
                                 return '<a href="#" class="research" name="parentNo">{0}</a>'.format(data);
                             }
                         },
-                        {"orderable": false, 'targets': 5, 'searchable': false},
-                        {"orderable": false, "searchable": false, className: 'text-center', "targets": 6},
+                        {"orderable": false, 'targets': 6, 'searchable': false},
                         {"orderable": false, "searchable": false, className: 'text-center', "targets": 7},
-                        {"orderable": false, 'searchable': false, 'targets': 8},
+                        {"orderable": false, "searchable": false, className: 'text-center', "targets": 8},
+                        {"orderable": false, 'searchable': false, 'targets': 9},
                         {
-                            "orderable": false, 'searchable': false, 'targets': 9,
+                            "orderable": false, 'searchable': false, 'targets': 10,
                             render: function (data, type, row, meta) {
                                 return '<div class="hidden-sm hidden-xs action-buttons">' +
                                     '<a class="green" href="#" data-memberNo="{0}" data-username="{1}">'.format(data, row["username"]) +
@@ -112,7 +114,7 @@
                             }
                         }/*,
                         {
-                            "orderable": false, 'searchable': false, 'targets': 10,
+                            "orderable": false, 'searchable': false, 'targets': 11,
                             render: function (data, type, row, meta) {
                                 return '<div class="hidden-sm hidden-xs action-buttons">' +
                                     '<a class="green" href="#" data-memberNo="{0}" data-username="{1}">'.format(data, row["username"]) +
@@ -134,7 +136,11 @@
                     "serverSide": true,
                     select: {style: 'single'}
                 });
-
+            myTable.on('order.dt search.dt', function () {
+                myTable.column(0, {search: 'applied', order: 'applied'}).nodes().each(function (cell, i) {
+                    cell.innerHTML = i + 1;
+                });
+            });
             myTable.on('draw', function () {
                 $('#dynamic-table tr').find('a:eq(0)').click(function () {
                     var url = "/memberInfo2.jspx?memberNo={0}".format($(this).text());
@@ -279,6 +285,7 @@
                                     <table id="dynamic-table" class="table table-striped table-bordered table-hover">
                                         <thead>
                                         <tr>
+                                            <th></th>
                                             <th>UID</th>
                                             <th>会员ID</th>
                                             <th>证件号</th>

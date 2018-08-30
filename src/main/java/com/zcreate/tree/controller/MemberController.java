@@ -87,7 +87,7 @@ public class MemberController implements ApplicationContextAware {
         log.debug("memberNo={}", memberNo);*/
         Map<String, Object> param = new HashMap<>();
         param.put("memberNo", memberNo);
-        if (memberNos != null && memberNos.indexOf(",") > 0)
+        if (memberNos != null )
             param.put("memberNos", memberNos.split(","));
         param.put("phone", phone);
         param.put("idCard", idCard);

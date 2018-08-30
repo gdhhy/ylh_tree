@@ -28,7 +28,7 @@ CREATE TABLE member_tree  (
   real_name varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   id_card varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   phone varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  member_info varchar(1023) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  member_info varchar(8191) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   parent_no varchar(26) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   cur_level int(11) NULL DEFAULT 0, -- 所在层级
   child_total int(11) NULL DEFAULT 0, -- 下级总数
