@@ -150,7 +150,7 @@ public class MemberController implements ApplicationContextAware {
                 baseText += "，下级深度：" + member.getChildDepth() + "，下级总数：" + member.getChildTotal();
                 item.put("type", "folder");
             } else {
-                baseText = "&nbsp;&nbsp;&nbsp;<i class='ace-icon fa fa-user'></i>&nbsp;" + baseText;
+                baseText = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class='ace-icon fa fa-user'></i>&nbsp;" + baseText;
                 item.put("type", "item");
             }
 

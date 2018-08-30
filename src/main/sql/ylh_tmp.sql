@@ -91,44 +91,6 @@ call buildTree_tree();
 
 update member_tree A ,ylhdata.member_base_file B set   A.id_card =B.id_card,A.phone=B.mobile where A.member_no=B.uid  and A.id_card is null;
 
-
-update   member_tree A,(
-select B.member_name,A.uid,
-CONCAT('{"基本信息":{"推荐人id":"',B.rcm_uid,'","电子邮箱":"',A.email,'","QQ":"',A.qq,'","性别":"',
-case A.sex when 1 then '男'  when 2 then '女' else '不明' end ,
-'","注册时间":"',FROM_UNIXTIME(B.register_date),
-'"},',
-'"账户":{',
-'"白积分账户余额":',C.w_point,
-',"红积分账户余额":',C.r_point,
-',"库存积分账户余额":',C.point,
-',"创业账户余额":',C.money_trade,
-',"预付款账户余额":',C.money_wallet,
-',"交易账户余额":',C.money_business,
-',"服务账户余额":',C.money_service,
-'},',
-'"提现":',ifnull(W.withdrow,''),
-'"地址":{',
-'"省":"',A.province,
-'","市":"',A.city,
-'","区县":"',A.county,
-'","街道":"',A.street,
-'","村":"',A.village,
-'","地址":"',A.address,'"}',
-'}') json
- from ylhdata.member_base_file A
- left join ylhdata.member_table B  on A.uid=B.uid
- left join ylhdata.member_account C  on A.uid=B.uid
- left join (select m_id,concat('[',GROUP_CONCAT('{','"账号":"',ifnull(account,''),'"',
-',"开户姓名":"',m_name,'"',
-',"银行":"',bank,'"',
-',"申请金额":',money,
-',"实际金额":',money_real,
-',"笔数":',times,
-'}'),']') withdrow from withdrow_account
-group by m_id ) W on B.member_id= W.m_id) B set A.member_info=B.json where A.member_no=B.uid; --- 考虑到很多字段含json的非法字符，不用
-
-
 update withdrow_account set m_name=REPLACE(m_name,'	','');  -- 66 line
 update withdrow_account set m_name=REPLACE(m_name,'','');  -- 66 line
 update withdrow_account set m_name= REPLACE(REPLACE(m_name, CHAR(10), ''), CHAR(13),''); -- 2
@@ -170,3 +132,40 @@ ifnull(concat('"提现":',W.withdrow,','),''),
 ',"笔数":',times,
 '}'),']') withdrow from withdrow_account
 group by m_id ) W on A.`会员id`= W.m_id) B set A.member_info=B.json where A.member_no=B.`会员uid`;
+
+
+update   member_tree A,(
+select B.member_name,A.uid,
+CONCAT('{"基本信息":{"推荐人id":"',B.rcm_uid,'","电子邮箱":"',A.email,'","QQ":"',A.qq,'","性别":"',
+case A.sex when 1 then '男'  when 2 then '女' else '不明' end ,
+'","注册时间":"',FROM_UNIXTIME(B.register_date),
+'"},',
+'"账户":{',
+'"白积分账户余额":',C.w_point,
+',"红积分账户余额":',C.r_point,
+',"库存积分账户余额":',C.point,
+',"创业账户余额":',C.money_trade,
+',"预付款账户余额":',C.money_wallet,
+',"交易账户余额":',C.money_business,
+',"服务账户余额":',C.money_service,
+'},',
+'"提现":',ifnull(W.withdrow,''),
+'"地址":{',
+'"省":"',A.province,
+'","市":"',A.city,
+'","区县":"',A.county,
+'","街道":"',A.street,
+'","村":"',A.village,
+'","地址":"',A.address,'"}',
+'}') json
+ from ylhdata.member_base_file A
+ left join ylhdata.member_table B  on A.uid=B.uid
+ left join ylhdata.member_account C  on A.uid=B.uid
+ left join (select m_id,concat('[',GROUP_CONCAT('{','"账号":"',ifnull(account,''),'"',
+',"开户姓名":"',m_name,'"',
+',"银行":"',bank,'"',
+',"申请金额":',money,
+',"实际金额":',money_real,
+',"笔数":',times,
+'}'),']') withdrow from withdrow_account
+group by m_id ) W on B.member_id= W.m_id) B set A.member_info=B.json where A.member_no=B.uid and A.member_info is null; --- 考虑到很多字段含json的非法字符，不用

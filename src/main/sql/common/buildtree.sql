@@ -1,3 +1,5 @@
+update member_tree set parent_no='----' where member_no='0000000000_0000000000_0000';
+
 CREATE DEFINER=`root`@`%` PROCEDURE `buildTree_tree`( )
 BEGIN
 	  -- 1、生成 curLevel
@@ -12,7 +14,7 @@ BEGIN
 	   -- 1、生成 curLevel
 			update member_tree  A join  (select member_no
                            from member_tree
-                           where  parent_no not in (select member_no from member_tree) or member_no='0000000000_0000000000_0000')  B
+                           where  parent_no not in (select member_no from member_tree) )  B
 			 on A.member_no=B. member_no
 			 set   A.cur_level=1;
 
@@ -27,30 +29,23 @@ BEGIN
  end while;
 
 		-- 2、计算直接下级 direct_count
-		/*set v_level=1;
-
-		while ROW_COUNT() > 0 do
-		  set v_level=v_level+1;
-		   update member_tree  A join  (select parent_no,count(*) direct_count from member_tree where cur_level= v_level group by parent_no )  B
-			 on A.member_no=B.parent_no
-			 set A.direct_count = B.direct_count
-			 where A.cur_level= v_level-1;
-		 end while;*/
 		  update member_tree  A join  (select parent_no,count(*) direct_count from member_tree   group by parent_no )  B
 			 on A.member_no=B.parent_no
 			 set A.direct_count = B.direct_count;
 
   	-- 3、计算总下级
-		-- 4、计算深度 ,从最大开始
+    -- 4、计算深度
 		select max(cur_level) into v_max_level from member_tree ;
 		set v_level =0;
 
 		while v_level < v_max_level do
-				 update member_tree  A join  (select parent_no,sum(child_total) direct2_count from member_tree where cur_level=  v_max_level- v_level  group by parent_no )  B
-			 on A.member_no=B.parent_no
-			 set A.child_total = B.direct2_count + A.direct_count;
+      update member_tree A join (select parent_no,sum(child_total) direct2_count from member_tree
+                                 where cur_level= v_max_level- v_level group by parent_no) B
+      on A.member_no=B.parent_no
+      set A.child_total = B.direct2_count + A.direct_count;
 
-			update member_tree set child_depth = v_level where cur_level = v_max_level-v_level;
+      update member_tree A , member_tree B
+      set A.child_depth = B.child_depth + 1 where  A.member_no = B.parent_no and B.child_depth = v_level;
 
 			set v_level=v_level + 1;
 		end while;
