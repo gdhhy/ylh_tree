@@ -57,6 +57,23 @@
             </otherwise>
         </choose>
     </select>
+    <select id="selectOffline" resultType="java.util.Map" parameterType="java.util.Map" useCache="true">
+        (select offline_id,ordersn,buyer_id,seller_id,memo,FROM_UNIXTIME(trade_time)trade_time,money,ver from order_offline where money>1000*1000 limit #{param.start1:INTEGER},3)
+        union
+        (select offline_id,ordersn,buyer_id,seller_id,memo,FROM_UNIXTIME(trade_time)trade_time,money,ver from order_offline where money &lt; 1000*10000 and money>100*10000 limit #{param.start2:INTEGER},3)
+        union
+        (select offline_id,ordersn,buyer_id,seller_id,memo,FROM_UNIXTIME(trade_time)trade_time,money,ver from order_offline where money &lt; 100*10000 and money>10*10000 limit #{param.start3:INTEGER},2)
+        union
+        (select offline_id,ordersn,buyer_id,seller_id,memo,FROM_UNIXTIME(trade_time)trade_time,money,ver from order_offline where money &lt; 10*10000 limit #{param.start4:INTEGER},2 );
+    </select>
+    <select id="selectStaticOffline" resultType="java.util.Map" parameterType="java.util.Map" useCache="true">
+        select offline_id,ordersn,buyer_id,seller_id,memo,FROM_UNIXTIME(trade_time)trade_time,money,ver from order_offline
+        <where>
+            <if test="param.money1!=null">AND money &lt; #{param.money1:DOUBLE}</if>
+            <if test="param.money2!=null">AND money>= #{param.money2:DOUBLE}</if>
+        </where>
+    </select>
+
     <select id="getMember" resultMap="UserResult" parameterType="java.util.Map" useCache="true">
         SELECT
         member_id, member_no, user_name,real_name, id_card, phone, member_info, parent_no, cur_level, child_total, child_depth, direct_count

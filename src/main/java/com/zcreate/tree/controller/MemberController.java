@@ -44,6 +44,10 @@ public class MemberController implements ApplicationContextAware {
     private Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
 
 
+    private java.util.Random random = new java.util.Random(System.currentTimeMillis());
+    private static  List<Map<String, Object>>  offline1;
+    private static  List<Map<String, Object>>  offline2;
+
     @PostConstruct
     private void init() {
         if (tableConfigList == null)
@@ -67,6 +71,31 @@ public class MemberController implements ApplicationContextAware {
     }
 
     @ResponseBody
+    @RequestMapping(value = "/offlineOrder", method = RequestMethod.GET, produces = "text/html;charset=UTF-8")
+    public String offlineOrder(@RequestParam(value = "draw", required = false) Integer draw,
+                               @RequestParam(value = "start", required = false) Integer start,
+                               @RequestParam(value = "length", required = false, defaultValue = "100") Integer length
+    ) {
+        int scope4 = 2406550, scope3 = 361049, scope2 = 22473, scope1 = 815;
+
+        Map<String, Object> param = new HashMap<>();
+        param.put("start1", random.nextInt(scope1 - 3));
+        param.put("start2", random.nextInt(scope2 - 3));
+        param.put("start3", random.nextInt(scope3 - 2));
+        param.put("start4", random.nextInt(scope4 - 2));
+
+
+        List<Map<String, Object>> offlines = memberMapper.selectOffline(param);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("data", offlines);
+        result.put("draw", draw);//draw——number类型——请求次数计数器，每次发送给服务器后原封返回，因为请求是异步的，为了确保每次请求都能对应到服务器返回到的数据。
+        result.put("recordsTotal", scope1 + scope2 + scope3 + scope4);
+        result.put("recordsFiltered",scope1 + scope2 + scope3 + scope4);
+        return gson.toJson(result);
+    }
+
+    @ResponseBody
     @RequestMapping(value = "/listMember", method = RequestMethod.GET, produces = "text/html;charset=UTF-8")
     public String listMember(@RequestParam(value = "memberNo", required = false) String memberNo,
                              @RequestParam(value = "memberNos", required = false) String memberNos,
@@ -87,7 +116,7 @@ public class MemberController implements ApplicationContextAware {
         log.debug("memberNo={}", memberNo);*/
         Map<String, Object> param = new HashMap<>();
         param.put("memberNo", memberNo);
-        if (memberNos != null )
+        if (memberNos != null)
             param.put("memberNos", memberNos.split(","));
         param.put("phone", phone);
         param.put("idCard", idCard);
@@ -121,24 +150,6 @@ public class MemberController implements ApplicationContextAware {
         Map<String, Object> param = new HashMap<>();
         param.put("parentNo", memberNo);
         List<Member> members = memberMapper.selectMember(param);
-        /*
-         * $item = array(
-         * 				'text' => $row['text'] ,
-         * 				'type' => $row['child_count'] > 0 ? 'folder' : 'item',
-         * 				'additionalParameters' =>  array('id' => $row['id'])
-         * 			);
-         * 			if($row['child_count'] > 0)
-         * 				 $item['additionalParameters']['children'] = true;
-         * 			else {
-         * 				  //we randomly make some items pre-selected for demonstration only
-         * 				  //in your app you can set $item['additionalParameters']['item-selected'] = true
-         * 				  //for those items that have been previously selected and saved and you want to show them to user again
-         * 				if(mt_rand(0, 3) == 0)
-         * 					$item['additionalParameters']['item-selected'] = true;
-         *                        }
-         *
-         * 			$data[$row['id']] = $item;
-         */
 
         Map<String, Object> result = new HashMap<>();
         Map<String, Object> obj = new HashMap<>();
@@ -478,4 +489,5 @@ public class MemberController implements ApplicationContextAware {
         }
         return gson.toJson(result);
     }
+
 }

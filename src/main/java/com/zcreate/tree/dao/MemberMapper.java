@@ -16,6 +16,10 @@ public interface MemberMapper {
 
     List<Member> selectMember(@Param("param") Map<String, Object> param);
 
+    List<Map<String, Object>> selectOffline(@Param("param") Map<String, Object> param);
+
+    List<Map<String, Object>> selectStaticOffline(@Param("param") Map<String, Object> param);
+
     Member getMember(@Param("param") Map<String, Object> param);
 
     List<Map<String, Object>> selectParent(@Param("param") Map<String, Object> param);
