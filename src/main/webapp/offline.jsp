@@ -95,6 +95,8 @@
                     //"processing": true,
                     "bFilter": false, //过滤功能
                     "bSort": false, //排序功能
+                    "paging": false,
+                    "info": false,
                     "serverSide": true,
                     select: {style: 'single'}
                 });

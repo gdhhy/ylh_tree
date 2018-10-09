@@ -58,11 +58,11 @@
         </choose>
     </select>
     <select id="selectOffline" resultType="java.util.Map" parameterType="java.util.Map" useCache="true">
-        (select offline_id,ordersn,buyer_id,seller_id,memo,FROM_UNIXTIME(trade_time)trade_time,money,ver from order_offline where money>1000*1000 limit #{param.start1:INTEGER},3)
+        (select offline_id,ordersn,buyer_id,seller_id,memo,FROM_UNIXTIME(trade_time)trade_time,money,ver from order_offline where money>=1000*10000 limit #{param.start1:INTEGER},3)
         union
-        (select offline_id,ordersn,buyer_id,seller_id,memo,FROM_UNIXTIME(trade_time)trade_time,money,ver from order_offline where money &lt; 1000*10000 and money>100*10000 limit #{param.start2:INTEGER},3)
+        (select offline_id,ordersn,buyer_id,seller_id,memo,FROM_UNIXTIME(trade_time)trade_time,money,ver from order_offline where money &lt; 1000*10000 and money>=100*10000 limit #{param.start2:INTEGER},3)
         union
-        (select offline_id,ordersn,buyer_id,seller_id,memo,FROM_UNIXTIME(trade_time)trade_time,money,ver from order_offline where money &lt; 100*10000 and money>10*10000 limit #{param.start3:INTEGER},2)
+        (select offline_id,ordersn,buyer_id,seller_id,memo,FROM_UNIXTIME(trade_time)trade_time,money,ver from order_offline where money &lt; 100*10000 and money>=10*10000 limit #{param.start3:INTEGER},2)
         union
         (select offline_id,ordersn,buyer_id,seller_id,memo,FROM_UNIXTIME(trade_time)trade_time,money,ver from order_offline where money &lt; 10*10000 limit #{param.start4:INTEGER},2 );
     </select>
