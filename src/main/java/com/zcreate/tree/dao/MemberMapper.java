@@ -16,9 +16,11 @@ public interface MemberMapper {
 
     List<Member> selectMember(@Param("param") Map<String, Object> param);
 
-    List<Map<String, Object>> selectOffline(@Param("param") Map<String, Object> param);
+    List<Map<String, Object>> selectOffline(@Param("list") List<Integer> param);
 
-    List<Map<String, Object>> selectStaticOffline(@Param("param") Map<String, Object> param);
+    int selectOfflineID(@Param("param") Map<String, Object> param);
+
+    int selectOfflineCount();
 
     Member getMember(@Param("param") Map<String, Object> param);
 

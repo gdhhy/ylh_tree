@@ -57,21 +57,25 @@
             </otherwise>
         </choose>
     </select>
-    <select id="selectOffline" resultType="java.util.Map" parameterType="java.util.Map" useCache="true">
-        (select offline_id,ordersn,buyer_id,seller_id,memo,FROM_UNIXTIME(trade_time)trade_time,money,ver from order_offline where money>=1000*10000 limit #{param.start1:INTEGER},3)
-        union
-        (select offline_id,ordersn,buyer_id,seller_id,memo,FROM_UNIXTIME(trade_time)trade_time,money,ver from order_offline where money &lt; 1000*10000 and money>=100*10000 limit #{param.start2:INTEGER},3)
-        union
-        (select offline_id,ordersn,buyer_id,seller_id,memo,FROM_UNIXTIME(trade_time)trade_time,money,ver from order_offline where money &lt; 100*10000 and money>=10*10000 limit #{param.start3:INTEGER},2)
-        union
-        (select offline_id,ordersn,buyer_id,seller_id,memo,FROM_UNIXTIME(trade_time)trade_time,money,ver from order_offline where money &lt; 10*10000 limit #{param.start4:INTEGER},2 );
-    </select>
-    <select id="selectStaticOffline" resultType="java.util.Map" parameterType="java.util.Map" useCache="true">
+    <select id="selectOffline" resultType="java.util.Map" parameterType="java.util.List" useCache="true">
         select offline_id,ordersn,buyer_id,seller_id,memo,FROM_UNIXTIME(trade_time)trade_time,money,ver from order_offline
         <where>
-            <if test="param.money1!=null">AND money &lt; #{param.money1:DOUBLE}</if>
-            <if test="param.money2!=null">AND money>= #{param.money2:DOUBLE}</if>
+            offline_id in
+            <foreach item="item" collection="list" separator="," open="(" close=")">
+                #{item}
+            </foreach>
         </where>
+    </select>
+    <select id="selectOfflineID" resultType="int" parameterType="java.util.Map" useCache="true">
+        select offline_id from order_offline
+        <where>
+            <if test="param.upMoney!=null">AND money &lt; #{param.upMoney:DOUBLE}</if>
+        </where>
+        order by offline_id asc limit 1;
+    </select>
+    <select id="selectOfflineCount" resultType="int" useCache="true">
+        select count(*)
+        from order_offline
     </select>
 
     <select id="getMember" resultMap="UserResult" parameterType="java.util.Map" useCache="true">

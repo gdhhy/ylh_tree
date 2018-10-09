@@ -75,15 +75,15 @@
                         {"orderable": false, 'targets': 5},
                         {"orderable": false, 'targets': 6, width: "50px"}
                     ],
-                    //"aLengthMenu": [[10, 15, 20, 100], ["10", "15", "20", "100"]],//二组数组，第一组数量，第二组说明文字;
-                    "bLengthChange": false, //改变每页显示数据数量
+                    "aLengthMenu": [[10, 20, 100], ["10", "20", "100"]],//二组数组，第一组数量，第二组说明文字;
+                    //"bLengthChange": false, //改变每页显示数据数量
                     "aaSorting": [],//"aaSorting": [[ 4, "desc" ]],//设置第5个元素为默认排序
                     language: {
                         url: '/js/datatables/datatables.chinese.json'
                     },
                     searching: false,
                     scrollY: '58vh',
-                    //"sPaginationType": "scrolling",
+                    "sPaginationType": "scrolling",
                     "ajax": {
                         url: url,
                         "data": function (d) {//删除多余请求参数
@@ -95,40 +95,46 @@
                     //"processing": true,
                     "bFilter": false, //过滤功能
                     "bSort": false, //排序功能
-                    "paging": false,
+                    //"paging": false,
                     "info": false,
                     "serverSide": true,
                     select: {style: 'single'}
                 });
 
             var loop = false;
-            myTable.on('draw.dt', function () {
-                //console.log("loop=" + loop);
-                if (loop) {
-                    setTimeout(function () {
-                        myTable.page('next').draw(false);
-                    }, 100);
-                }
+
+            /* myTable.on('draw.dt', function () {
+                 //console.log("loop=" + loop);
+                 if (loop) {
+                     setTimeout(function () {
+                         myTable.page('next').draw(false);
+                     }, 100);
+                 }
+             });*/
+            $('#version').change(function () {
+                var version = $(this).children('option:selected').val();
+                var url = "/offlineOrder.jspx?version=" + version;
+                myTable.ajax.url(encodeURI(url)).load();
             });
 
-            // var t;
+            var t;
 
             $('.btn-group-justified').find("button:first").click(function (event) {
                 $(this).hide();
                 $('.btn-group-justified').find("button:last").show();
                 myTable.page('next').draw(false);
                 loop = true;
-                //$('.dataTables_paginate').find("a:last").trigger('click');
+                $('.dataTables_paginate').find("a:last").trigger('click');
 
-                /*t = setInterval(function () {
+                t = setInterval(function () {
                     $('.dataTables_paginate').find("a:last").trigger('click');
-                }, 2000);*/
+                }, 3000);
             });
             $('.btn-group-justified').find("button:last").click(function (event) {
                 $(this).hide();
                 $('.btn-group-justified').find("button:first").show();
                 loop = false;
-                //clearInterval(t);
+                clearInterval(t);
             });
             $('.btn-group-justified').find("button:last").hide();
         })
@@ -146,6 +152,17 @@
         <div class="main-content-inner">
 
             <div class="breadcrumbs" id="breadcrumbs">
+                <ul class="breadcrumb">
+                    <form class="form-search form-inline">
+                        <label>线下交易金额 ：</label>
+                        <select id="version" class="nav-search-input">
+                            <option value="v4">1万-10万</option>
+                            <option value="v3">10万-100万</option>
+                            <option value="v2">100万-1000万</option>
+                            <option value="v1" selected>1000万以上</option>
+                        </select>
+                    </form>
+                </ul>
                 <ul class="breadcrumb btn-group btn-group-justified">
                     <div class="center">
                         <button class="btn btn-app btn-purple btn-sm">

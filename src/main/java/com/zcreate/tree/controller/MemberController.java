@@ -45,8 +45,12 @@ public class MemberController implements ApplicationContextAware {
 
 
     private java.util.Random random = new java.util.Random(System.currentTimeMillis());
-    private static  List<Map<String, Object>>  offline1;
-    private static  List<Map<String, Object>>  offline2;
+    //private static int offlineID1 = 1, offlineID2, offlineID3, offlineID4, offlineCount;
+
+    private static List<Integer> randomInt1 = new ArrayList<>(1000);
+    private static List<Integer> randomInt2 = new ArrayList<>(3 * 10000);
+    private static List<Integer> randomInt3 = new ArrayList<>(50 * 10000);
+    private static List<Integer> randomInt4 = new ArrayList<>(300 * 10000);
 
     @PostConstruct
     private void init() {
@@ -63,6 +67,7 @@ public class MemberController implements ApplicationContextAware {
                 }
             }
         }
+        // loadOfflineRandom();
     }
 
     @Override
@@ -70,28 +75,95 @@ public class MemberController implements ApplicationContextAware {
         this.applicationContext = applicationContext;
     }
 
+    private void loadOfflineRandom() {
+        Map<String, Object> param = new HashMap<>();
+
+        int startValue = 1;
+        param.put("upMoney", 1000 * 10000);
+        int offlineID = memberMapper.selectOfflineID(param);
+        while (randomInt1.size() < offlineID - startValue)
+            randomInt1.add(startValue + random.nextInt(offlineID - startValue));//between zero (inclusive) and bound (exclusive)
+        // printMinMax(randomInt1);
+
+        startValue = randomInt1.size() + 1;
+        param.put("upMoney", 100 * 10000);
+        offlineID = memberMapper.selectOfflineID(param);
+        log.debug("offlineID:" + offlineID);
+        while (randomInt2.size() < offlineID - startValue)
+            randomInt2.add(startValue + random.nextInt(offlineID - startValue));
+        // printMinMax(randomInt2);
+
+        startValue = randomInt1.size() + randomInt2.size() + 1;
+        param.put("upMoney", 10 * 10000);
+        offlineID = memberMapper.selectOfflineID(param);
+        while (randomInt3.size() < offlineID - startValue)
+            randomInt3.add(startValue + random.nextInt(offlineID - startValue));
+        // printMinMax(randomInt3);
+
+        startValue = randomInt1.size() + randomInt2.size() + randomInt3.size() + 1;
+        offlineID = memberMapper.selectOfflineCount() + 1;
+        while (randomInt4.size() < offlineID - startValue)
+            randomInt4.add(startValue + random.nextInt(offlineID - startValue));
+        /* printMinMax(randomInt4);*/
+    }
+
+    public void printMinMax(List<Integer> list) {
+        // System.out.println("size() = " + list.size());
+        int min = Integer.MAX_VALUE, max = Integer.MIN_VALUE;
+        for (Integer i : list) {
+            if (min > i) min = i;
+            if (max < i) max = i;
+        }
+        System.out.println("min = " + min + ", max=" + max);
+    }
+
     @ResponseBody
     @RequestMapping(value = "/offlineOrder", method = RequestMethod.GET, produces = "text/html;charset=UTF-8")
     public String offlineOrder(@RequestParam(value = "draw", required = false) Integer draw,
+                               @RequestParam(value = "version", required = false, defaultValue = "v1") String version,
                                @RequestParam(value = "start", required = false) Integer start,
-                               @RequestParam(value = "length", required = false, defaultValue = "100") Integer length
-    ) {
-        int scope4 = 2732644, scope3 = 397472, scope2 = 26234, scope1 = 905;
+                               @RequestParam(value = "length", required = false, defaultValue = "100") Integer length) {
+        if (randomInt1.size() == 0) loadOfflineRandom();
+        if (length == -1) length = 10;
+        List<Integer> list;
+        int size = 0;
+        // 1000万以上，100万-1000万，10万-100万，1万-10万
+        switch (version) {
+            case "v1":
+                list = randomInt1.subList(start, start + length);
+                size = randomInt1.size();
+                break;
+            case "v2":
+                list = randomInt2.subList(start, start + length);
+                size = randomInt2.size();
+                break;
+            case "v3":
+                list = randomInt3.subList(start, start + length);
+                size = randomInt3.size();
+                break;
+            default:
+                list = randomInt4.subList(start, start + length);
+                size = randomInt4.size();
+        }
+        List<Map<String, Object>> offlines = memberMapper.selectOffline(list);
 
-        Map<String, Object> param = new HashMap<>();
-        param.put("start1", random.nextInt(scope1 - 3));
-        param.put("start2", random.nextInt(scope2 - 3));
-        param.put("start3", random.nextInt(scope3 - 2));
-        param.put("start4", random.nextInt(scope4 - 2));
-
-
-        List<Map<String, Object>> offlines = memberMapper.selectOffline(param);
+        //保持list的整数顺序
+        List<Map<String, Object>> orderOffline = new ArrayList<>(offlines.size());
+        for (Integer offlineID : list) {
+            for (Map map : offlines) {
+                if (offlineID.equals(map.get("offline_id"))) {
+                    orderOffline.add(map);
+                    //offlines.remove(map);
+                    break;
+                }
+            }
+        }
 
         Map<String, Object> result = new HashMap<>();
-        result.put("data", offlines);
+        result.put("data", orderOffline);
         result.put("draw", draw);//draw——number类型——请求次数计数器，每次发送给服务器后原封返回，因为请求是异步的，为了确保每次请求都能对应到服务器返回到的数据。
-        result.put("recordsTotal", scope1 + scope2 + scope3 + scope4);
-        result.put("recordsFiltered",scope1 + scope2 + scope3 + scope4);
+        result.put("recordsTotal", size);
+        result.put("recordsFiltered", size);
         return gson.toJson(result);
     }
 
@@ -405,9 +477,12 @@ public class MemberController implements ApplicationContextAware {
     }
 
     public static void main(String[] args) {
-        String a = "a80ec1685262a53a25e5288c7b5b764c";
-        String result = forceReturn(a, 10, 8);
-        System.out.println("result =\n" + result);
+        List<Integer> randomInt = new ArrayList<>(500 * 10000);
+        long startTime = System.currentTimeMillis();
+        java.util.Random random = new java.util.Random(startTime);
+        for (int i = 0; i < 500 * 10000; i++)
+            randomInt.add(random.nextInt(500 * 10000));
+        System.out.println("time = " + (System.currentTimeMillis() - startTime));
     }
 
     private static String forceReturn(String line, int maxLength, int lineLength) {
