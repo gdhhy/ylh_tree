@@ -57,7 +57,6 @@
                 .DataTable({
                     bAutoWidth: false,
                     "columns": [
-                        {"data": "offline_id", "sClass": "center"},
                         {"data": "ordersn", "sClass": "center"},
                         {"data": "buyer_id", "sClass": "center"},
                         {"data": "seller_id", "sClass": "center"},
@@ -68,14 +67,13 @@
                     ],
 
                     'columnDefs': [
-                        {"orderable": false, className: 'text-center', "targets": 0, width: "50px"},
-                        {"orderable": false, className: 'text-center', "targets": 1, width: "80px"},
+                        {"orderable": false, className: 'text-center', "targets": 0, width: "80px"},
+                        {"orderable": false, className: 'text-center', "targets": 1, width: "250px"},
                         {"orderable": false, className: 'text-center', "targets": 2, width: "250px"},
-                        {"orderable": false, className: 'text-center', "targets": 3, width: "250px"},
-                        {"orderable": false, className: 'text-center', "targets": 4},
-                        {"orderable": false, className: 'text-center', "targets": 5, width: "140px"},
-                        {"orderable": false, 'targets': 6},
-                        {"orderable": false, 'targets': 7, width: "50px"}
+                        {"orderable": false, className: 'text-center', "targets": 3},
+                        {"orderable": false, className: 'text-center', "targets": 4, width: "140px"},
+                        {"orderable": false, 'targets': 5},
+                        {"orderable": false, 'targets': 6, width: "50px"}
                     ],
                     //"aLengthMenu": [[10, 15, 20, 100], ["10", "15", "20", "100"]],//二组数组，第一组数量，第二组说明文字;
                     "bLengthChange": false, //改变每页显示数据数量
@@ -103,7 +101,7 @@
 
             var loop = false;
             myTable.on('draw.dt', function () {
-                console.log("loop=" + loop);
+                //console.log("loop=" + loop);
                 if (loop) {
                     setTimeout(function () {
                         myTable.page('next').draw(false);
@@ -179,13 +177,12 @@
                                     <table id="dynamic-table" class="table table-striped table-bordered table-hover">
                                         <thead>
                                         <tr>
-                                            <th></th>
                                             <th>订单号</th>
                                             <th>买家</th>
                                             <th>卖家</th>
                                             <th>备注</th>
                                             <th>交易时间</th>
-                                            <th>金额</th>
+                                            <th>金额(元)</th>
                                             <th>版本</th>
                                         </tr>
                                         </thead>
