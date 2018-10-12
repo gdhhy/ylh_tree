@@ -119,9 +119,9 @@
 
             var t;
 
-            $('.btn-group-justified').find("button:first").click(function (event) {
+            $('#breadcrumbs').find("button:first").click(function (event) {
                 $(this).hide();
-                $('.btn-group-justified').find("button:last").show();
+                $('#breadcrumbs').find("button:last").show();
                 myTable.page('next').draw(false);
                 loop = true;
                 $('.dataTables_paginate').find("a:last").trigger('click');
@@ -130,13 +130,13 @@
                     $('.dataTables_paginate').find("a:last").trigger('click');
                 }, 3000);
             });
-            $('.btn-group-justified').find("button:last").click(function (event) {
+            $('#breadcrumbs').find("button:last").click(function (event) {
                 $(this).hide();
-                $('.btn-group-justified').find("button:first").show();
+                $('#breadcrumbs').find("button:first").show();
                 loop = false;
                 clearInterval(t);
             });
-            $('.btn-group-justified').find("button:last").hide();
+            $('#breadcrumbs').find("button:last").hide();
         })
     </script>
 </head>
@@ -148,7 +148,7 @@
         } catch (e) {
         }
     </script>
-    <div class="main-content">
+    <div class="main-content" style="height: 500px">
         <div class="main-content-inner">
 
             <div class="breadcrumbs" id="breadcrumbs">
@@ -163,17 +163,15 @@
                         </select>
                     </form>
                 </ul>
-                <ul class="breadcrumb btn-group btn-group-justified">
-                    <div class="center">
-                        <button class="btn btn-app btn-purple btn-sm">
-                            <i class="ace-icon fa fa-play bigger-120"></i>
-                            开始
-                        </button>
-                        <button class="btn btn-app btn-purple btn-sm">
-                            <i class="ace-icon fa fa-stop bigger-120"></i>
-                            停止
-                        </button>
-                    </div>
+                <ul class="breadcrumb center">
+                    <button class="btn btn-app btn-purple btn-sm">
+                        <i class="ace-icon fa fa-play  "></i>
+                        开始
+                    </button>
+                    <button class="btn btn-app btn-purple btn-sm">
+                        <i class="ace-icon fa fa-stop "></i>
+                        停止
+                    </button>
                 </ul>
             </div>
             <!-- /section:basics/content.breadcrumbs -->

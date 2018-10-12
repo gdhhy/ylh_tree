@@ -247,9 +247,9 @@
                     <form class="form-search form-inline">
                         <label>版本 ：</label>
                         <select id="version" class="nav-search-input">
-                            <option value="v1" selected>V1</option>
-                            <option value="v2" selected>V2</option>
-                            <option value="v3" selected>V3</option>
+                            <option value="v1">V1</option>
+                            <option value="v2">V2</option>
+                            <option value="v3">V3</option>
                             <option value="v4" selected>V4</option>
                         </select>
                         <label>积分类型 ：</label>
