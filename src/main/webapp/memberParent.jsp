@@ -65,7 +65,7 @@
                         {"data": "推荐人会员ID", "sClass": "center", defaultContent: ""},
                         {"data": "身份证号", "sClass": "center"},
                         {"data": "电话", "sClass": "center"},
-                        {"data": "用户ID", "sClass": "center"}
+                        {"data": "UID", "sClass": "center"}
                     ],
 
                     'columnDefs': [
@@ -84,7 +84,7 @@
                             "orderable": false, 'searchable': false, 'targets': 6, title: '积分账户流水',
                             render: function (data, type, row, meta) {
                                 return '<div class="hidden-sm hidden-xs action-buttons">' +
-                                    '<a class="green" href="#" data-memberNo="{0}" data-username="{1}">'.format(data, row["用户名"]) +
+                                    '<a class="green" href="#" data-memberNo="{0}" data-username="{1}">'.format(data, row["会员ID"]) +
                                     '<i class="ace-icon fa fa-film bigger-130"></i>' +
                                     '</a>' +
                                     '</div>';

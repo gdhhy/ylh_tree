@@ -26,16 +26,3 @@ CREATE INDEX INDEX_rc_member_no
   on recordcount (member_no);
 CREATE UNIQUE INDEX index_config_member
   ON recordcount (config_id, member_no);
-
-create table column_config (
-  colID            int primary key auto_increment,
-  talbe_name       varchar(100),
-  col_name         varchar(100),
-  chiness          varchar(100),
-  tip              varchar(100),
-  query_param_name varchar(100),
-  order_id         int
-
-)
-
-  child_total

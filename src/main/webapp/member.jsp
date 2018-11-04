@@ -68,12 +68,14 @@
                         {"data": "childTotal", "sClass": "center"},
                         {"data": "childDepth", "sClass": "center"},
                         {"data": "directCount", "sClass": "center"},
-                        {"data": "memberNo", "sClass": "center"}/*,
-                        {"data": "memberNo", "sClass": "center"}*/
+                        {"data": "memberNo", "sClass": "center"},
+                        {"data": "memberNo", "sClass": "center"}
                     ],
 
                     'columnDefs': [
-                        {"orderable": false, "searchable": false, className: 'text-center', "targets": 0},
+                        {"orderable": false, "searchable": false, className: 'text-center', "targets": 0, render: function (data, type, row, meta) {
+                                return meta.row + 1 + meta.settings._iDisplayStart;
+                            }},
                         {
                             "orderable": false, className: 'text-center', "targets": 1, render: function (data, type, row, meta) {
                                 return '<a href="#" name="memberNo">{0}</a>'.format(data);
@@ -112,7 +114,7 @@
                                     '</a>' +
                                     '</div>';
                             }
-                        }/*,
+                        },
                         {
                             "orderable": false, 'searchable': false, 'targets': 11,
                             render: function (data, type, row, meta) {
@@ -122,7 +124,7 @@
                                     '</a>' +
                                     '</div>';
                             }
-                        }*/
+                        }
                     ],
                     "aLengthMenu": [[20, 100], ["20", "100"]],//二组数组，第一组数量，第二组说明文字;
                     "aaSorting": [],//"aaSorting": [[ 4, "desc" ]],//设置第5个元素为默认排序
@@ -156,10 +158,13 @@
                     var url = "/memberParent.jsp?memberNo={0}&username={1}".format($(this).attr("data-memberNo"), $(this).attr("data-username"));
                     window.open(encodeURI(encodeURI(url)), "_blank");
                 });
-               /* $('#dynamic-table tr').find('a:eq(3)').click(function () {
+                $('#dynamic-table tr').find('a:eq(3)').click(function () {
                     var url = "/memberRecordCount.jsp?memberNo={0}&username={1}".format($(this).attr("data-memberNo"), $(this).attr("data-username"));
                     window.open(encodeURI(encodeURI(url)), "_blank");
-                });*/
+                });
+                $('#dynamic-table tr').find('.hasDetail').click(function () {
+                    window.open($(this).attr("data-Url"), "_blank");
+                });
             });
             $('.btn-success').click(function () {
                 search();
@@ -296,7 +301,7 @@
                                             <th>最深级数</th>
                                             <th>直接下级数</th>
                                             <th>查看上线</th>
-                                            <%--<th>积分账户流水</th>--%>
+                                            <th>积分账户流水</th>
                                         </tr>
                                         </thead>
                                     </table>
