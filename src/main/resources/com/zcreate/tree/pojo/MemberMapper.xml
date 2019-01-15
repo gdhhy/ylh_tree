@@ -16,6 +16,7 @@
         <result column="child_total" jdbcType="INTEGER" property="childTotal"/>
         <result column="child_depth" jdbcType="INTEGER" property="childDepth"/>
         <result column="direct_count" jdbcType="INTEGER" property="directCount"/>
+        <result column="type" jdbcType="INTEGER" property="type"/>
     </resultMap>
     <sql id="queryWhere">
         <where>
@@ -41,7 +42,7 @@
     </select>
     <select id="selectMember" resultMap="UserResult" parameterType="java.util.Map" useCache="true">
         SELECT
-        member_id, member_no, user_name,real_name, id_card, phone, member_info, parent_no, cur_level, child_total, child_depth, direct_count
+        member_id, member_no, user_name,real_name, id_card, phone, member_info, parent_no, cur_level, child_total, child_depth, direct_count, type
         FROM member_v4
         <include refid="queryWhere"/>
         <if test="@com.zcreate.Ognl@isNotEmpty(param.orderBy)">order by ${param.orderBy}</if>
@@ -80,7 +81,7 @@
 
     <select id="getMember" resultMap="UserResult" parameterType="java.util.Map" useCache="true">
         SELECT
-        member_id, member_no, user_name,real_name, id_card, phone, member_info, parent_no, cur_level, child_total, child_depth, direct_count
+        member_id, member_no, user_name,real_name, id_card, phone, member_info, parent_no, cur_level, child_total, child_depth, direct_count, type
         FROM member_v4
         <include refid="queryWhere"/>
         limit 1

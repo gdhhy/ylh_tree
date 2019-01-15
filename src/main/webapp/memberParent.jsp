@@ -73,7 +73,7 @@
                         {
                             "orderable": true, className: 'text-center', "targets": 1, title: 'UID',
                             render: function (data, type, row, meta) {
-                                return '<a  href="#" class="showMemberInfo" >{0}</a>'.format(data);
+                                return '<a  href="#" class="showMemberInfo"  data-memberNo="{0}">{1}</a>'.format(data, data);
                             }
                         },
                         {"orderable": true, className: 'text-center', "targets": 2, title: '会员ID'},
@@ -110,7 +110,7 @@
 
             myTable.on('draw', function () {
                 $('#dynamic-table tr').find('.showMemberInfo').click(function () {
-                    var url = "/memberInfo2.jspx?memberNo={0}".format(memberNo);
+                    var url = "/memberInfo2.jspx?memberNo={0}".format($(this).attr("data-memberNo"));
                     window.open(encodeURI(encodeURI(url)), "_blank");
                 });
 

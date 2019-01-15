@@ -15,6 +15,7 @@ public class Member implements Serializable {
     private Integer childTotal;
     private Integer childDepth;
     private Integer directCount;
+    private Integer type;
 
     public Integer getMemberId() {
         return memberId;
@@ -110,5 +111,13 @@ public class Member implements Serializable {
 
     public void setDirectCount(Integer directCount) {
         this.directCount = directCount;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
     }
 }

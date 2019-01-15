@@ -236,8 +236,10 @@ public class MemberController implements ApplicationContextAware {
                 baseText = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class='ace-icon fa fa-user'></i>&nbsp;" + baseText;
                 item.put("type", "item");
             }
-
-            item.put("text", baseText);
+            if (member.getType() == 1)
+                item.put("text", "<span style='color:#FF00FF'>" + baseText + "</span>");
+            else
+                item.put("text", baseText);
 
             Map<String, Object> addParam = new HashMap<>();
             addParam.put("children", member.getDirectCount() > 0 ? true : null);

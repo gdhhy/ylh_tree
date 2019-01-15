@@ -136,7 +136,14 @@
                     "ajax": url,
                     "processing": true,
                     "serverSide": true,
-                    select: {style: 'single'}
+                    select: {style: 'single'},
+                    "rowCallback": function( row, data ) {
+                        console.log(data.type);
+                        if ( data.type === 1 ) {
+                            $(row).css("color", "#FF00FF");
+                           // $('td:eq(4)', row).html( '<b>A</b>' );
+                        }
+                    }
                 });
             myTable.on('order.dt search.dt', function () {
                 myTable.column(0, {search: 'applied', order: 'applied'}).nodes().each(function (cell, i) {
